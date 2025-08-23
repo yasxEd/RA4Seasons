@@ -9,7 +9,8 @@ const GALLERY_KEY = "hotelGalleryData";
 const DATA_INITIALIZED_KEY = "hotelDataInitialized";
 const TESTIMONIALS_KEY = "testimonials_user_submitted";
 
-export const rooms = [
+// Remove export from rooms and galleryImages
+const rooms = [
   {
     name: "Double or Twin Room",
     images: [
@@ -116,7 +117,7 @@ export const rooms = [
   },
 ];
 
-export const galleryImages = [
+const galleryImages = [
   "/assets/img/gallery/20190629-153146-largejpg.jpg",
   "/assets/img/gallery/riad-atlas-4-seasons (1).jpg",
   "/assets/img/gallery/riad-atlas-4-seasons (2).jpg",
@@ -137,12 +138,12 @@ export const galleryImages = [
 ];
 
 // Global data access functions - use these in your main app
-export const getHotelRooms = () => {
+const getHotelRooms = () => {
   if (typeof window === 'undefined') return rooms; // Server-side fallback
   return getFromLocalStorage(ROOMS_KEY, rooms);
 };
 
-export const getHotelGallery = () => {
+const getHotelGallery = () => {
   if (typeof window === 'undefined') return galleryImages; // Server-side fallback
   return getFromLocalStorage(GALLERY_KEY, galleryImages);
 };
