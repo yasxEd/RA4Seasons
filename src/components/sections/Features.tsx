@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight, X, MapPin, Users, Calendar, Wifi, Coffee, Mountain, Eye, Star, Phone, Mail } from "lucide-react";
-import { getRooms, getGalleryImages, useHotelData } from "../../lib/hotelDataManager";
+import { ChevronLeft, ChevronRight, X, MapPin, Users, Mountain, Eye, Star, Phone, Mail } from "lucide-react";
+import { useHotelData } from "../../lib/hotelDataManager";
 
+// Define the experiences offered
 const experiences = [
 	{
 		icon: <Mountain className="w-8 h-8" />,
@@ -38,9 +39,6 @@ const Features = () => {
 	const [galleryOpen, setGalleryOpen] = useState(false);
 	const [currentGalleryImages, setCurrentGalleryImages] = useState([]);
 	const [galleryIndex, setGalleryIndex] = useState(0);
-	const [selectedRoom, setSelectedRoom] = useState(null);
-	const [isScrolled, setIsScrolled] = useState(false);
-	const [hoveredRoom, setHoveredRoom] = useState(null);
 	const roomsRef = useRef(null);
 
 	useEffect(() => {
@@ -69,10 +67,6 @@ const Features = () => {
 
 	const prevImage = () => {
 		setGalleryIndex((prev) => (prev - 1 + currentGalleryImages.length) % currentGalleryImages.length);
-	};
-
-	const scrollToRooms = () => {
-		roomsRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
 
 	return (

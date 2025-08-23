@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { X, Plus, Edit2, Trash2, Save, ArrowLeft, Home, Image, Eye, EyeOff, Upload } from "lucide-react";
+import { X, Plus, Edit2, Trash2, ArrowLeft, Home, Image, Eye, EyeOff, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const ROOMS_KEY = "hotelRoomsData";
@@ -212,10 +212,26 @@ const initializeData = () => {
   }
 };
 
+// Room type for state
+type Room = {
+  name: string;
+  images: string[];
+  price: string;
+  originalPrice: string;
+  details: string;
+  beds: string;
+  capacity: string;
+  amenities: string[] | string;
+  rating: number;
+  reviews: number;
+  id?: number;
+};
+
 export default function AdminPage() {
   const router = useRouter();
-  const [adminRooms, setAdminRooms] = useState([]);
-  const [adminGallery, setAdminGallery] = useState([]);
+  // Explicitly type state to fix type error
+  const [adminRooms, setAdminRooms] = useState<Room[]>([]);
+  const [adminGallery, setAdminGallery] = useState<string[]>([]);
   const [currentView, setCurrentView] = useState('dashboard');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [inputPassword, setInputPassword] = useState("");
@@ -225,7 +241,7 @@ export default function AdminPage() {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   
   // Room states
-  const [editingRoomIdx, setEditingRoomIdx] = useState(null);
+  const [editingRoomIdx, setEditingRoomIdx] = useState<number | null>(null);
   const [showAddRoom, setShowAddRoom] = useState(false);
   const [newRoom, setNewRoom] = useState({
     name: "",
@@ -241,7 +257,7 @@ export default function AdminPage() {
   });
 
   // Gallery states
-  const [editingGalleryIdx, setEditingGalleryIdx] = useState(null);
+  const [editingGalleryIdx, setEditingGalleryIdx] = useState<number | null>(null);
   const [showAddImage, setShowAddImage] = useState(false);
   const [newGalleryImage, setNewGalleryImage] = useState("");
   const [editGalleryUrl, setEditGalleryUrl] = useState("");
@@ -470,24 +486,12 @@ export default function AdminPage() {
     setEditingRoomIdx(null);
   };
 
-  const handleEditGalleryImage = (idx) => {
-    setEditingGalleryIdx(idx);
-    setEditGalleryUrl(adminGallery[idx]);
-  };
-
-  const handleSaveGalleryEdit = () => {
+  const handleRemoveGalleryImageDebug = (idx) => {
     setAdminGallery(prev => {
-      const updated = [...prev];
-      updated[editingGalleryIdx] = editGalleryUrl;
+      const updated = prev.filter((_, i) => i !== idx);
+      console.log('🗑️ Removed gallery image at index:', idx, 'Remaining images:', updated.length);
       return updated;
     });
-    setEditingGalleryIdx(null);
-    setEditGalleryUrl("");
-  };
-
-  const handleCancelGalleryEdit = () => {
-    setEditingGalleryIdx(null);
-    setEditGalleryUrl("");
   };
 
   if (!isAuthenticated) {

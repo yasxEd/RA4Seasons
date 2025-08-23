@@ -132,7 +132,24 @@ export const defaultGalleryImages = [
 ];
 
 // Safe localStorage access with fallbacks
-const safeGetFromStorage = (key, fallback) => {
+export interface HotelRoom {
+	name: string;
+	images: string[];
+	price: string;
+	originalPrice: string;
+	details: string;
+	beds: string;
+	capacity: string;
+	amenities: string[];
+	rating: number;
+	reviews: number;
+}
+
+export interface SafeGetFromStorage {
+	<T>(key: string, fallback: T): T;
+}
+
+const safeGetFromStorage: SafeGetFromStorage = <T>(key: string, fallback: T): T => {
 	if (typeof window === "undefined") return fallback;
 
 	try {
@@ -140,7 +157,7 @@ const safeGetFromStorage = (key, fallback) => {
 		if (stored && stored !== "null" && stored !== "undefined") {
 			const parsed = JSON.parse(stored);
 			if (Array.isArray(parsed)) {
-				return parsed;
+				return parsed as T;
 			}
 		}
 	} catch (error) {
@@ -165,15 +182,27 @@ export const useHotelData = () => {
 	const [gallery, setGallery] = React.useState(getGalleryImages());
 
 	React.useEffect(() => {
-		const handleDataUpdate = (event) => {
-			setRooms(event.detail.rooms);
-			setGallery(event.detail.gallery);
+		interface HotelDataUpdateEvent extends CustomEvent {
+			detail: {
+				rooms: HotelRoom[];
+				gallery: string[];
+			};
+		}
+
+		const handleDataUpdate = (event: Event) => {
+			const customEvent = event as CustomEvent<{ rooms: HotelRoom[]; gallery: string[] }>;
+			setRooms(customEvent.detail.rooms);
+			setGallery(customEvent.detail.gallery);
 		};
 
 		window.addEventListener("hotelDataUpdated", handleDataUpdate);
 
 		// Also listen for storage events from other tabs
-		const handleStorageChange = (event) => {
+		interface StorageEventWithKey extends StorageEvent {
+			key: string | null;
+		}
+
+		const handleStorageChange = (event: StorageEventWithKey) => {
 			if (event.key === ROOMS_KEY) {
 				setRooms(getRooms());
 			} else if (event.key === GALLERY_KEY) {
@@ -200,7 +229,7 @@ export const getApprovedTestimonials = () => {
 		const testimonials = JSON.parse(
 			localStorage.getItem("testimonials_user_submitted") || "[]"
 		);
-		return testimonials.filter((t) => t.status === "approved");
+		return testimonials.filter((t: { status: string }) => t.status === "approved");
 	} catch (error) {
 		console.warn("Error reading testimonials:", error);
 		return [];
