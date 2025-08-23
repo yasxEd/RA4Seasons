@@ -166,7 +166,7 @@ const defaultGalleryImages: string[] = [
 ];
 
 // Helper functions for localStorage operations with proper typing
-const saveToLocalStorage = <T>(key: string, data: T): void => {
+const saveToLocalStorage = <T,>(key: string, data: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(data));
     console.log(`✅ Saved ${key} to localStorage:`, Array.isArray(data) ? data.length : 'data', 'items');
@@ -176,7 +176,7 @@ const saveToLocalStorage = <T>(key: string, data: T): void => {
   }
 };
 
-const getFromLocalStorage = <T>(key: string, defaultValue: T): T => {
+function getFromLocalStorage<T>(key: string, defaultValue: T): T {
   try {
     const stored = localStorage.getItem(key);
     if (stored && stored !== "null" && stored !== "undefined") {
@@ -192,7 +192,7 @@ const getFromLocalStorage = <T>(key: string, defaultValue: T): T => {
     console.error(`❌ Error loading ${key} from localStorage:`, error);
     return defaultValue;
   }
-};
+}
 
 // Global data access functions
 export const getHotelRooms = (): Room[] => {
