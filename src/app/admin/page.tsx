@@ -195,15 +195,15 @@ function getFromLocalStorage<T>(key: string, defaultValue: T): T {
 }
 
 // Global data access functions
-export const getHotelRooms = (): Room[] => {
-  if (typeof window === 'undefined') return defaultRooms;
-  return getFromLocalStorage<Room[]>(ROOMS_KEY, defaultRooms);
-};
+// export const getHotelRooms = (): Room[] => {
+//   if (typeof window === 'undefined') return defaultRooms;
+//   return getFromLocalStorage<Room[]>(ROOMS_KEY, defaultRooms);
+// };
 
-export const getHotelGallery = (): string[] => {
-  if (typeof window === 'undefined') return defaultGalleryImages;
-  return getFromLocalStorage<string[]>(GALLERY_KEY, defaultGalleryImages);
-};
+// export const getHotelGallery = (): string[] => {
+//   if (typeof window === 'undefined') return defaultGalleryImages;
+//   return getFromLocalStorage<string[]>(GALLERY_KEY, defaultGalleryImages);
+// };
 
 // Force data sync function
 const forceDataSync = () => {
