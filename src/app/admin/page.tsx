@@ -9,8 +9,36 @@ const GALLERY_KEY = "hotelGalleryData";
 const DATA_INITIALIZED_KEY = "hotelDataInitialized";
 const TESTIMONIALS_KEY = "testimonials_user_submitted";
 
-// Remove export from rooms and galleryImages
-const rooms = [
+// Room type definition
+type Room = {
+  name: string;
+  images: string[];
+  price: string;
+  originalPrice: string;
+  details: string;
+  beds: string;
+  capacity: string;
+  amenities: string[] | string;
+  rating: number;
+  reviews: number;
+  id?: number;
+};
+
+// Testimonial type
+type Testimonial = {
+  name: string;
+  country: string;
+  room: string;
+  nights: number;
+  date: string;
+  type: string;
+  rating: number;
+  comment: string;
+  status: string;
+};
+
+// Default data
+const defaultRooms: Room[] = [
   {
     name: "Double or Twin Room",
     images: [
@@ -117,7 +145,7 @@ const rooms = [
   },
 ];
 
-const galleryImages = [
+const defaultGalleryImages: string[] = [
   "/assets/img/gallery/20190629-153146-largejpg.jpg",
   "/assets/img/gallery/riad-atlas-4-seasons (1).jpg",
   "/assets/img/gallery/riad-atlas-4-seasons (2).jpg",
@@ -137,50 +165,25 @@ const galleryImages = [
   "/assets/img/gallery/riad-atlas-4-seasons.jpg",
 ];
 
-// Global data access functions - use these in your main app
-const getHotelRooms = () => {
-  if (typeof window === 'undefined') return rooms; // Server-side fallback
-  return getFromLocalStorage(ROOMS_KEY, rooms);
-};
-
-const getHotelGallery = () => {
-  if (typeof window === 'undefined') return galleryImages; // Server-side fallback
-  return getFromLocalStorage(GALLERY_KEY, galleryImages);
-};
-
-// Force data sync function
-const forceDataSync = () => {
-  // Create a custom event to notify other components
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('hotelDataUpdated', {
-      detail: {
-        rooms: getFromLocalStorage(ROOMS_KEY, rooms),
-        gallery: getFromLocalStorage(GALLERY_KEY, galleryImages)
-      }
-    }));
-  }
-};
-
-// Helper functions for localStorage operations
-const saveToLocalStorage = (key, data) => {
+// Helper functions for localStorage operations with proper typing
+const saveToLocalStorage = <T>(key: string, data: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(data));
-    console.log(`✅ Saved ${key} to localStorage:`, data.length, 'items');
-    // Force sync after saving
+    console.log(`✅ Saved ${key} to localStorage:`, Array.isArray(data) ? data.length : 'data', 'items');
     forceDataSync();
   } catch (error) {
     console.error(`❌ Error saving ${key} to localStorage:`, error);
   }
 };
 
-const getFromLocalStorage = (key, defaultValue = []) => {
+const getFromLocalStorage = <T>(key: string, defaultValue: T): T => {
   try {
     const stored = localStorage.getItem(key);
     if (stored && stored !== "null" && stored !== "undefined") {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
         console.log(`✅ Loaded ${key} from localStorage:`, parsed.length, 'items');
-        return parsed;
+        return parsed as T;
       }
     }
     console.log(`ℹ️ No valid data found for ${key}, using default`);
@@ -191,45 +194,48 @@ const getFromLocalStorage = (key, defaultValue = []) => {
   }
 };
 
+// Global data access functions
+export const getHotelRooms = (): Room[] => {
+  if (typeof window === 'undefined') return defaultRooms;
+  return getFromLocalStorage<Room[]>(ROOMS_KEY, defaultRooms);
+};
+
+export const getHotelGallery = (): string[] => {
+  if (typeof window === 'undefined') return defaultGalleryImages;
+  return getFromLocalStorage<string[]>(GALLERY_KEY, defaultGalleryImages);
+};
+
+// Force data sync function
+const forceDataSync = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('hotelDataUpdated', {
+      detail: {
+        rooms: getFromLocalStorage<Room[]>(ROOMS_KEY, defaultRooms),
+        gallery: getFromLocalStorage<string[]>(GALLERY_KEY, defaultGalleryImages)
+      }
+    }));
+  }
+};
+
 const initializeData = () => {
   const isInitialized = localStorage.getItem(DATA_INITIALIZED_KEY);
   
   if (!isInitialized) {
-    // First time initialization
     console.log('🚀 Initializing hotel data for the first time');
-    saveToLocalStorage(ROOMS_KEY, rooms);
-    saveToLocalStorage(GALLERY_KEY, galleryImages);
+    saveToLocalStorage(ROOMS_KEY, defaultRooms);
+    saveToLocalStorage(GALLERY_KEY, defaultGalleryImages);
     localStorage.setItem(DATA_INITIALIZED_KEY, 'true');
-    return { rooms: rooms, gallery: galleryImages };
+    return { rooms: defaultRooms, gallery: defaultGalleryImages };
   } else {
-    // Load existing data
     console.log('📂 Loading existing hotel data from localStorage');
-    const storedRooms = getFromLocalStorage(ROOMS_KEY, rooms);
-    const storedGallery = getFromLocalStorage(GALLERY_KEY, galleryImages);
-    
-    // Always return stored data, even if empty (user might have deleted everything)
+    const storedRooms = getFromLocalStorage<Room[]>(ROOMS_KEY, defaultRooms);
+    const storedGallery = getFromLocalStorage<string[]>(GALLERY_KEY, defaultGalleryImages);
     return { rooms: storedRooms, gallery: storedGallery };
   }
 };
 
-// Room type for state
-type Room = {
-  name: string;
-  images: string[];
-  price: string;
-  originalPrice: string;
-  details: string;
-  beds: string;
-  capacity: string;
-  amenities: string[] | string;
-  rating: number;
-  reviews: number;
-  id?: number;
-};
-
 export default function AdminPage() {
   const router = useRouter();
-  // Explicitly type state to fix type error
   const [adminRooms, setAdminRooms] = useState<Room[]>([]);
   const [adminGallery, setAdminGallery] = useState<string[]>([]);
   const [currentView, setCurrentView] = useState('dashboard');
@@ -243,7 +249,7 @@ export default function AdminPage() {
   // Room states
   const [editingRoomIdx, setEditingRoomIdx] = useState<number | null>(null);
   const [showAddRoom, setShowAddRoom] = useState(false);
-  const [newRoom, setNewRoom] = useState({
+  const [newRoom, setNewRoom] = useState<Omit<Room, 'id'>>({
     name: "",
     images: [],
     price: "Enter dates to see prices",
@@ -257,23 +263,8 @@ export default function AdminPage() {
   });
 
   // Gallery states
-  const [editingGalleryIdx, setEditingGalleryIdx] = useState<number | null>(null);
   const [showAddImage, setShowAddImage] = useState(false);
   const [newGalleryImage, setNewGalleryImage] = useState("");
-  const [editGalleryUrl, setEditGalleryUrl] = useState("");
-
-  // Testimonial type
-  type Testimonial = {
-    name: string;
-    country: string;
-    room: string;
-    nights: number;
-    date: string;
-    type: string;
-    rating: number;
-    comment: string;
-    status: string;
-  };
 
   // Testimonial states
   const [pendingTestimonials, setPendingTestimonials] = useState<Testimonial[]>([]);
@@ -287,7 +278,7 @@ export default function AdminPage() {
     setIsDataLoaded(true);
     
     // Load testimonials
-    const storedTestimonials = getFromLocalStorage(TESTIMONIALS_KEY, []);
+    const storedTestimonials = getFromLocalStorage<Testimonial[]>(TESTIMONIALS_KEY, []);
     setPendingTestimonials(storedTestimonials.filter((t) => t.status === "pending"));
   }, []);
 
@@ -310,7 +301,7 @@ export default function AdminPage() {
   // Reload testimonials when view changes
   useEffect(() => {
     if (currentView === 'dashboard') {
-      const storedTestimonials = getFromLocalStorage(TESTIMONIALS_KEY, []);
+      const storedTestimonials = getFromLocalStorage<Testimonial[]>(TESTIMONIALS_KEY, []);
       setPendingTestimonials(storedTestimonials.filter((t) => t.status === "pending"));
     }
   }, [currentView]);
@@ -325,12 +316,12 @@ export default function AdminPage() {
   };
 
   // Image upload handler
-  const handleImageUpload = (e, type = 'room') => {
-    const files = Array.from(e.target.files);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type = 'room') => {
+    const files = Array.from(e.target.files || []);
     files.forEach(file => {
       const reader = new FileReader();
       reader.onload = (event) => {
-        const imageUrl = event.target.result;
+        const imageUrl = event.target?.result as string;
         if (type === 'room') {
           setNewRoom(prev => ({
             ...prev,
@@ -348,7 +339,7 @@ export default function AdminPage() {
     });
   };
 
-  const handleRemoveRoomImage = (imageIndex) => {
+  const handleRemoveRoomImage = (imageIndex: number) => {
     setNewRoom(prev => ({
       ...prev,
       images: prev.images.filter((_, i) => i !== imageIndex)
@@ -357,10 +348,12 @@ export default function AdminPage() {
 
   const handleAddRoom = () => {
     if (newRoom.name && newRoom.images.length > 0) {
-      const roomToAdd = {
+      const roomToAdd: Room = {
         ...newRoom,
-        amenities: newRoom.amenities.split(',').map(a => a.trim()).filter(a => a),
-        id: Date.now() // Add unique ID for better tracking
+        amenities: typeof newRoom.amenities === 'string' 
+          ? newRoom.amenities.split(',').map(a => a.trim()).filter(a => a)
+          : newRoom.amenities,
+        id: Date.now()
       };
       
       setAdminRooms(prev => {
@@ -378,7 +371,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleRemoveRoom = (idx) => {
+  const handleRemoveRoom = (idx: number) => {
     setAdminRooms(prev => {
       const updated = prev.filter((_, i) => i !== idx);
       console.log('🗑️ Removed room at index:', idx, 'Remaining rooms:', updated.length);
@@ -398,7 +391,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleRemoveGalleryImage = (idx) => {
+  const handleRemoveGalleryImage = (idx: number) => {
     setAdminGallery(prev => {
       const updated = prev.filter((_, i) => i !== idx);
       console.log('🗑️ Removed gallery image at index:', idx, 'Remaining images:', updated.length);
@@ -406,8 +399,8 @@ export default function AdminPage() {
     });
   };
 
-  const handleApproveTestimonial = (idx) => {
-    const storedTestimonials = getFromLocalStorage(TESTIMONIALS_KEY, []);
+  const handleApproveTestimonial = (idx: number) => {
+    const storedTestimonials = getFromLocalStorage<Testimonial[]>(TESTIMONIALS_KEY, []);
     if (storedTestimonials[idx]) {
       storedTestimonials[idx].status = "approved";
       saveToLocalStorage(TESTIMONIALS_KEY, storedTestimonials);
@@ -416,35 +409,25 @@ export default function AdminPage() {
     }
   };
 
-  const handleRejectTestimonial = (idx) => {
-    const storedTestimonials = getFromLocalStorage(TESTIMONIALS_KEY, []);
+  const handleRejectTestimonial = (idx: number) => {
+    const storedTestimonials = getFromLocalStorage<Testimonial[]>(TESTIMONIALS_KEY, []);
     storedTestimonials.splice(idx, 1);
     saveToLocalStorage(TESTIMONIALS_KEY, storedTestimonials);
     setPendingTestimonials(storedTestimonials.filter((t) => t.status === "pending"));
     console.log('❌ Rejected testimonial at index:', idx);
   };
 
-  // Debug info
-  // const handleDebugInfo = () => {
-  //   console.log('🔍 DEBUG INFO:');
-  //   console.log('Rooms in state:', adminRooms.length);
-  //   console.log('Gallery in state:', adminGallery.length);
-  //   console.log('Rooms in localStorage:', getFromLocalStorage(ROOMS_KEY, []).length);
-  //   console.log('Gallery in localStorage:', getFromLocalStorage(GALLERY_KEY, []).length);
-  //   console.log('Is data loaded:', isDataLoaded);
-  //   console.log('Full rooms data:', adminRooms);
-  //   console.log('Full gallery data:', adminGallery);
-  // };
-
-  const handleEditRoomField = (field: string, value: string | number) => {
-    setAdminRooms(prev => {
-      const updated = [...prev];
-      updated[editingRoomIdx] = {
-        ...updated[editingRoomIdx],
-        [field]: value
-      };
-      return updated;
-    });
+  const handleEditRoomField = (field: keyof Room, value: string | number) => {
+    if (editingRoomIdx !== null) {
+      setAdminRooms(prev => {
+        const updated = [...prev];
+        updated[editingRoomIdx] = {
+          ...updated[editingRoomIdx],
+          [field]: value
+        };
+        return updated;
+      });
+    }
   };
 
   const handleEditRoomImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -453,45 +436,43 @@ export default function AdminPage() {
       const reader = new FileReader();
       reader.onload = (event) => {
         const imageUrl = event.target?.result as string;
-        setAdminRooms(prev => {
-          const updated = [...prev];
-          updated[editingRoomIdx] = {
-            ...updated[editingRoomIdx],
-            images: [...updated[editingRoomIdx].images, imageUrl]
-          };
-          return updated;
-        });
+        if (editingRoomIdx !== null) {
+          setAdminRooms(prev => {
+            const updated = [...prev];
+            updated[editingRoomIdx] = {
+              ...updated[editingRoomIdx],
+              images: [...updated[editingRoomIdx].images, imageUrl]
+            };
+            return updated;
+          });
+        }
       };
       reader.readAsDataURL(file);
     });
   };
 
-  const handleEditRoomRemoveImage = (imgIdx) => {
-    setAdminRooms(prev => {
-      const updated = [...prev];
-      updated[editingRoomIdx].images = updated[editingRoomIdx].images.filter((_, i) => i !== imgIdx);
-      return updated;
-    });
+  const handleEditRoomRemoveImage = (imgIdx: number) => {
+    if (editingRoomIdx !== null) {
+      setAdminRooms(prev => {
+        const updated = [...prev];
+        updated[editingRoomIdx].images = updated[editingRoomIdx].images.filter((_, i) => i !== imgIdx);
+        return updated;
+      });
+    }
   };
 
   const handleSaveRoomEdit = () => {
-    // Ensure amenities is array
-    setAdminRooms(prev => {
-      const updated = [...prev];
-      updated[editingRoomIdx].amenities = Array.isArray(updated[editingRoomIdx].amenities)
-        ? updated[editingRoomIdx].amenities
-        : updated[editingRoomIdx].amenities.split(',').map(a => a.trim()).filter(a => a);
-      return updated;
-    });
-    setEditingRoomIdx(null);
-  };
-
-  const handleRemoveGalleryImageDebug = (idx) => {
-    setAdminGallery(prev => {
-      const updated = prev.filter((_, i) => i !== idx);
-      console.log('🗑️ Removed gallery image at index:', idx, 'Remaining images:', updated.length);
-      return updated;
-    });
+    if (editingRoomIdx !== null) {
+      setAdminRooms(prev => {
+        const updated = [...prev];
+        const currentRoom = updated[editingRoomIdx];
+        updated[editingRoomIdx].amenities = Array.isArray(currentRoom.amenities)
+          ? currentRoom.amenities
+          : (currentRoom.amenities as string).split(',').map(a => a.trim()).filter(a => a);
+        return updated;
+      });
+      setEditingRoomIdx(null);
+    }
   };
 
   if (!isAuthenticated) {
@@ -822,7 +803,7 @@ export default function AdminPage() {
                 <input
                   type="text"
                   placeholder="Amenities (comma separated)"
-                  value={newRoom.amenities}
+                  value={typeof newRoom.amenities === 'string' ? newRoom.amenities : newRoom.amenities.join(', ')}
                   onChange={e => setNewRoom({...newRoom, amenities: e.target.value})}
                   className="w-full px-4 py-3 bg-slate-50/50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 mb-4 text-black"
                 />
@@ -1002,7 +983,7 @@ export default function AdminPage() {
                       </div>
                       <div className="mt-3">
                         <div className="flex flex-wrap gap-2">
-                          {room.amenities.map((amenity, i) => (
+                          {(Array.isArray(room.amenities) ? room.amenities : []).map((amenity, i) => (
                             <span key={i} className="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs rounded-full">
                               {amenity}
                             </span>
