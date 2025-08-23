@@ -419,7 +419,7 @@ export default function AdminPage() {
   //   console.log('Full gallery data:', adminGallery);
   // };
 
-  const handleEditRoomField = (field: string, value: any) => {
+  const handleEditRoomField = (field: string, value: string | number) => {
     setAdminRooms(prev => {
       const updated = [...prev];
       updated[editingRoomIdx] = {
@@ -430,15 +430,18 @@ export default function AdminPage() {
     });
   };
 
-  const handleEditRoomImageUpload = (e) => {
-    const files = Array.from(e.target.files);
+  const handleEditRoomImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
     files.forEach(file => {
       const reader = new FileReader();
       reader.onload = (event) => {
-        const imageUrl = event.target.result;
+        const imageUrl = event.target?.result as string;
         setAdminRooms(prev => {
           const updated = [...prev];
-          updated[editingRoomIdx].images = [...updated[editingRoomIdx].images, imageUrl];
+          updated[editingRoomIdx] = {
+            ...updated[editingRoomIdx],
+            images: [...updated[editingRoomIdx].images, imageUrl]
+          };
           return updated;
         });
       };
@@ -679,7 +682,7 @@ export default function AdminPage() {
                       <div className="font-semibold text-emerald-700">{t.name} ({t.country})</div>
                       <div className="text-sm text-slate-600">{t.room} · {t.nights} nuit{t.nights > 1 ? "s" : ""} · {t.date}</div>
                       <div className="text-sm text-slate-600">{t.type} · Note: {t.rating}/10</div>
-                      <div className="text-base text-slate-800 font-light">"{t.comment}"</div>
+                      <div className="text-base text-slate-800 font-light">&quot;{t.comment}&quot;</div>
                       <div className="flex gap-3 mt-2">
                         <button
                           onClick={() => handleApproveTestimonial(idx)}

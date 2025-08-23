@@ -51,7 +51,7 @@ const Pricing = () => {
               Choisissez <span className="font-medium text-emerald-700">votre chambre</span>
             </h1>
             <p className="text-lg md:text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed font-light">
-              Sélectionnez le type et le nombre d'hébergements que vous souhaitez réserver.
+              Sélectionnez le type et le nombre d&apos;hébergements que vous souhaitez réserver.
             </p>
           </div>
 
@@ -110,7 +110,7 @@ const Pricing = () => {
               <span>Je réserve</span>
               <ChevronDown className="w-5 h-5" />
             </button>
-            <div className="text-xs text-stone-400 mt-4">Vous ne paierez rien pour l'instant</div>
+            <div className="text-xs text-stone-400 mt-4">Vous ne paierez rien pour l&apos;instant</div>
           </div>
         </div>
       </div>
