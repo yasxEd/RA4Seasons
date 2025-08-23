@@ -50,7 +50,7 @@ const Features = () => {
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
-	const openGallery = (images, index = 0) => {
+	const openGallery = (images: string[], index = 0) => {
 		setCurrentGalleryImages(images);
 		setGalleryIndex(index);
 		setGalleryOpen(true);
