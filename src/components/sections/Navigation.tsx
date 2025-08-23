@@ -162,9 +162,6 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Spacer for fixed navbar */}
-      <div className="h-20"></div>
     </>
   );
 };
