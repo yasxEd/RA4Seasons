@@ -37,7 +37,7 @@ const Features = () => {
 	const { rooms: adminRooms, gallery: adminGallery } = useHotelData();
 
 	const [galleryOpen, setGalleryOpen] = useState(false);
-	const [currentGalleryImages, setCurrentGalleryImages] = useState([]);
+	const [currentGalleryImages, setCurrentGalleryImages] = useState<string[]>([]);
 	const [galleryIndex, setGalleryIndex] = useState(0);
 	const roomsRef = useRef(null);
 	const [isScrolled, setIsScrolled] = useState(false);
@@ -70,6 +70,7 @@ const Features = () => {
 		setGalleryIndex((prev) => (prev - 1 + currentGalleryImages.length) % currentGalleryImages.length);
 	};
 
+	const [hoveredRoom, setHoveredRoom] = useState<number | null>(null);
 	return (
 		<div className="min-h-screen bg-white">
 			{/* Enhanced Hero Section */}
