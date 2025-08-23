@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight, X, MapPin, Users, Mountain, Eye, Star, Phone, Mail } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, MapPin, Users, Mountain, Eye, Star, Phone, Mail, Coffee } from "lucide-react";
 import { useHotelData } from "../../lib/hotelDataManager";
 
 // Define the experiences offered
@@ -40,6 +40,7 @@ const Features = () => {
 	const [currentGalleryImages, setCurrentGalleryImages] = useState([]);
 	const [galleryIndex, setGalleryIndex] = useState(0);
 	const roomsRef = useRef(null);
+	const [isScrolled, setIsScrolled] = useState(false);
 
 	useEffect(() => {
 		const handleScroll = () => {
