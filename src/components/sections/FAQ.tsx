@@ -5,7 +5,7 @@ const FAQSection = () => {
   // Track open state for each individual item by index
   const [openItems, setOpenItems] = useState(new Set()); // All closed by default
 
-  const toggleItem = (index) => {
+  const toggleItem = (index: number) => {
     setOpenItems(prev => {
       const newSet = new Set(prev);
       if (newSet.has(index)) {
