@@ -3,15 +3,13 @@ import { Mail, ArrowRight, MessageCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 const ContactSection = () => {
-  // Removed newsletter email state
   const [showContactForm, setShowContactForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    company: "",
     message: ""
   });
-  const { t, language } = useLanguage(); // changed from lang to language
+  const { t, language } = useLanguage();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,15 +24,14 @@ const ContactSection = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      alert(t('contact_form_alert_required') || 'Please fill in all required fields.');
+      alert("Please fill in your name, email, and inquiry.");
       return;
     }
-    console.log('Form submitted:', formData);
-    alert(t('contact_form_alert_success') || 'Thank you for your message! We\'ll get back to you soon.');
+    console.log('Booking inquiry submitted:', formData);
+    alert("Thank you for your inquiry! We'll contact you soon about your stay.");
     setFormData({
       name: "",
       email: "",
-      company: "",
       message: ""
     });
     setShowContactForm(false);
@@ -54,7 +51,7 @@ const ContactSection = () => {
             {/* Badge - styled like FAQ */}
             <div className="flex items-center gap-2 md:gap-3 bg-white/80 border border-stone-200/50 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium mb-4 md:mb-6 w-fit">
               <MessageCircle className="w-4 h-4 md:w-5 md:h-5 text-emerald-600" />
-              <span className="text-emerald-700 font-semibold">{t("contact_badge")}</span>
+              <span className="text-emerald-700 font-semibold">Booking & Inquiry</span>
             </div>
             {/* Heading - responsive text sizes */}
             <h3
@@ -62,12 +59,12 @@ const ContactSection = () => {
                 ${language === "ar" ? "text-3xl sm:text-4xl md:text-5xl lg:text-6xl" : ""}
               `}
             >
-              {t("contact_title")}
+              riad atlas 4 seasons
             </h3>
 
             {/* Description */}
             <p className="text-base md:text-lg text-stone-600 leading-relaxed max-w-lg">
-              {t("contact_subtitle")}
+              Send us a message to inquire about availability, pricing, or any questions about your stay at riad atlas 4 seasons. We look forward to welcoming you!
             </p>
           </div>
 
@@ -81,7 +78,7 @@ const ContactSection = () => {
                 className="pr-8 w-full text-center text-lg"
                 style={{ fontSize: "1rem", textAlign: "center", width: "100%" }}
               >
-                {t("contact_cta")}
+                Request Booking / Inquiry
               </span>
               <span className="absolute right-2 top-1/2 -translate-y-1/2">
                 <span className={`w-12 h-12 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-200 ${showContactForm ? 'rotate-45' : ''}`}>
@@ -101,8 +98,12 @@ const ContactSection = () => {
               <div className="relative z-10 p-6 md:p-8 lg:p-12">
                 <div className="max-w-2xl mx-auto">
                   <div className="text-center mb-6 md:mb-8">
-                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-800 mb-3 md:mb-4">{t("contact_form_title")}</h3>
-                    <p className="text-base md:text-lg text-stone-600">{t("contact_form_subtitle")}</p>
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-800 mb-3 md:mb-4">
+                      Booking Inquiry
+                    </h3>
+                    <p className="text-base md:text-lg text-stone-600">
+                      Fill out the form below to request a booking or ask about your stay. We'll reply as soon as possible!
+                    </p>
                   </div>
                   <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -113,18 +114,7 @@ const ContactSection = () => {
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
-                          placeholder={t("contact_form_name")}
-                          className="w-full px-4 md:px-6 py-3 md:py-4 bg-white border border-stone-200/50 rounded-xl md:rounded-2xl text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-200 transition-all duration-200 text-sm md:text-base"
-                        />
-                      </div>
-                      {/* Company Input */}
-                      <div className="relative">
-                        <input
-                          type="text"
-                          name="company"
-                          value={formData.company}
-                          onChange={handleInputChange}
-                          placeholder={t("contact_form_company")}
+                          placeholder="Your Name"
                           className="w-full px-4 md:px-6 py-3 md:py-4 bg-white border border-stone-200/50 rounded-xl md:rounded-2xl text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-200 transition-all duration-200 text-sm md:text-base"
                         />
                       </div>
@@ -136,7 +126,7 @@ const ContactSection = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        placeholder={t("contact_form_email")}
+                        placeholder="Your Email"
                         className="w-full px-4 md:px-6 py-3 md:py-4 bg-white border border-stone-200/50 rounded-xl md:rounded-2xl text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-200 transition-all duration-200 text-sm md:text-base"
                       />
                     </div>
@@ -146,7 +136,7 @@ const ContactSection = () => {
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
-                        placeholder={t("contact_form_message")}
+                        placeholder="Your message (dates, number of guests, questions...)"
                         rows={4}
                         className="w-full px-4 md:px-6 py-3 md:py-4 bg-white border border-stone-200/50 rounded-xl md:rounded-2xl text-stone-800 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-200 transition-all duration-200 resize-none text-sm md:text-base"
                       ></textarea>
@@ -157,7 +147,7 @@ const ContactSection = () => {
                         type="submit"
                         className="bg-emerald-700 hover:bg-emerald-800 text-white px-8 md:px-12 py-3 md:py-4 rounded-full font-semibold transition-all duration-200 flex items-center gap-2 md:gap-3 group text-sm md:text-base w-full sm:w-auto justify-center"
                       >
-                        <span>{t("contact_form_send")}</span>
+                        <span>Send Inquiry</span>
                         <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform duration-200" />
                       </button>
                     </div>
@@ -168,7 +158,7 @@ const ContactSection = () => {
                       onClick={() => setShowContactForm(false)}
                       className="text-stone-400 hover:text-stone-600 text-xs md:text-sm underline transition-colors duration-200"
                     >
-                      {t("contact_form_close")}
+                      Close
                     </button>
                   </div>
                 </div>
