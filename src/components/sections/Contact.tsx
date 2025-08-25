@@ -102,7 +102,7 @@ const ContactSection = () => {
                       Booking Inquiry
                     </h3>
                     <p className="text-base md:text-lg text-stone-600">
-                      Fill out the form below to request a booking or ask about your stay. We'll reply as soon as possible!
+                      Fill out the form below to request a booking or ask about your stay. We&#39;ll reply as soon as possible!
                     </p>
                   </div>
                   <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
