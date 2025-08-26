@@ -316,7 +316,6 @@ const Services = () => {
       <section className="py-12 sm:py-20 bg-gradient-to-br from-emerald-50/30 to-stone-50/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-10 sm:mb-16">
-            <div className="w-12 sm:w-16 h-px bg-emerald-600 mx-auto mb-4 sm:mb-6" />
             <h2 className="text-2xl sm:text-3xl lg:text-5xl font-light text-stone-900 mb-4 sm:mb-6">Meet Our Staff</h2>
             <p className="text-base sm:text-lg text-stone-600 font-light max-w-2xl mx-auto">
               Our dedicated team is here to make your stay unforgettable.

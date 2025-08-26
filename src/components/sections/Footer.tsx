@@ -29,8 +29,12 @@ const Footer = () => {
         <div className="flex flex-wrap justify-center gap-8 md:gap-12 mb-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-1 mb-1">
-              <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
               <span className="text-xl font-light text-stone-800">9.5</span>
+      <img
+                  src="/assets/img/Booking-Logo.png"
+                  alt="Booking.com"
+                  className="h-4 sm:h-5 w-auto"
+                />
             </div>
             <p className="text-sm text-stone-500 tracking-wide">675 Guest Rating</p>
           </div>
@@ -39,17 +43,12 @@ const Footer = () => {
             <p className="text-sm text-stone-500 tracking-wide">Elevation</p>
           </div>
           <div className="text-center">
-            <div className="text-xl font-light text-stone-800 mb-1">10</div>
+            <div className="text-xl font-light text-stone-800 mb-1">8</div>
             <p className="text-sm text-stone-500 tracking-wide">Rooms</p>
           </div>
         </div>
 
-        {/* Footer links */}
-        <div className="flex flex-wrap justify-center gap-6 mb-6">
-          <Link href="/#features" className="text-stone-600 hover:text-emerald-700 transition-colors text-sm font-medium">Features</Link>
-          <Link href="/#pricing" className="text-stone-600 hover:text-emerald-700 transition-colors text-sm font-medium">Pricing</Link>
-          <Link href="/#contact" className="text-stone-600 hover:text-emerald-700 transition-colors text-sm font-medium">Contact</Link>
-        </div>
+    
 
         {/* Copyright */}
         <div className="text-xs text-stone-400 mt-4">&copy; {new Date().getFullYear()} Riad Atlas 4 Seasons. All rights reserved.</div>
