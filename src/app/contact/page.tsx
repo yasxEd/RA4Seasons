@@ -250,8 +250,12 @@ const ContactPage = () => {
                   <div className="grid grid-cols-2 gap-6 mb-8">
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-1 mb-2">
-                        <Star className="w-5 h-5 fill-emerald-500 text-emerald-500" />
                         <span className="text-2xl font-light text-stone-900">9.5</span>
+                      <img
+                  src="/assets/img/Booking-Logo.png"
+                  alt="Booking.com"
+                  className="h-4 sm:h-5 w-auto"
+                />
                       </div>
                       <p className="text-sm text-stone-500">Guest Rating</p>
                       <p className="text-xs text-stone-400">675 reviews</p>

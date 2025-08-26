@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Image from 'next/image';
 import { Activity, ChevronLeft, ChevronRight, X, Eye, Phone, Mail, Coffee, Mountain, Star, GalleryHorizontalEnd } from "lucide-react";
 
 // Helper to resolve image paths
@@ -152,9 +153,16 @@ export const GallerySections: React.FC<GalleryProps> = ({
                     WebkitBackfaceVisibility: "hidden",
                   }}
                 >
-                  <img
+                  <Image
                     src={getImageSrc(img)}
                     alt={`Gallery ${idx + 1}`}
+                    fill
+                    sizes="180px"
+                    className="object-cover rounded-[16px]"
+                    draggable={false}
+                    loading={isHero ? "eager" : "lazy"}
+                    placeholder="blur"
+                    blurDataURL="/assets/img/blur-placeholder.jpg"
                     style={{
                       width: "100%",
                       height: "100%",
@@ -166,6 +174,7 @@ export const GallerySections: React.FC<GalleryProps> = ({
                       transform: "translateZ(0)",
                       backfaceVisibility: "hidden",
                       WebkitBackfaceVisibility: "hidden",
+                      position: "absolute"
                     }}
                   />
                   <div
@@ -320,6 +329,23 @@ const GalleryFlexImage: React.FC<{url: string; artist: string; date: string; las
       onMouseEnter={() => !mobile && setHover(true)}
       onMouseLeave={() => !mobile && setHover(false)}
     >
+      <Image
+        src={url}
+        alt={artist}
+        fill
+        sizes={mobile ? "100vw" : "400px"}
+        className="object-cover"
+        loading={mobile ? "eager" : "lazy"}
+        placeholder="blur"
+        blurDataURL="/assets/img/blur-placeholder.jpg"
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          borderRadius: mobile ? "14px" : "0",
+          position: "absolute"
+        }}
+      />
       <div
         className="caption"
         style={{

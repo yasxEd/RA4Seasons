@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Navigation, { NAVBAR_HEIGHT } from "@/components/sections/Navigation";
 import Footer from "@/components/sections/Footer";
 import { GalleryHorizontalEnd } from "lucide-react";
+import Image from 'next/image';
 
 const images = [
   "/assets/img/gallery/1.jpg",
@@ -48,7 +49,10 @@ export default function GalleryPage() {
             <span className="text-xs sm:text-sm font-medium tracking-wide">Gallery</span>
           </div>
         </div>
-        <h2 className="text-5xl font-extralight tracking-wide text-black mb-8 tracking-wider text-left">
+        <h2
+          id="visual-journey"
+          className="text-5xl font-extralight tracking-wide text-black mb-8 tracking-wider text-left"
+        >
           Visual Journey
         </h2>
         <p className="text-xl text-neutral-700 leading-relaxed font-light max-w-3xl text-left">
@@ -80,11 +84,17 @@ export default function GalleryPage() {
                   gridRow: isActive ? "span 2" : undefined,
                 }}
               >
-                <img
+                <Image
                   src={src}
                   alt=""
-                  className="w-full h-full object-cover rounded-lg"
+                  fill
+                  sizes={isActive ? "(min-width: 640px) 60vw, 100vw" : "200px"}
+                  className="object-cover rounded-lg"
                   draggable={false}
+                  loading={isActive ? "eager" : "lazy"}
+                  placeholder="blur"
+                  blurDataURL="/assets/img/blur-placeholder.jpg"
+                  style={{ position: "absolute" }}
                 />
               </div>
             );

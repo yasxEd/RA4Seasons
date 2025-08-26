@@ -1,62 +1,83 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Add this import
 
 export const NAVBAR_HEIGHT = 80;
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Track which nav item is active based on scroll position
   const [activeNav, setActiveNav] = useState<string | null>(null);
+
+  const router = useRouter(); // Add this
 
   const navItems = [
     { name: 'About', href: '/#about' },
     { name: 'Rooms', href: '/#rooms' },
-    { name: 'Gallery', href: '/gallery' },      // ensure this is a route
+    { name: 'Gallery', href: '/gallery' },
     { name: 'Services', href: '/#services' },
-    { name: 'Activities', href: '/activities' }, // ensure this is a route
+    { name: 'Activities', href: '/activities' },
   ];
 
-  // Add scroll handler for "Rooms"
+  // Updated nav click handler
   const handleNavClick = (item: typeof navItems[0], e: React.MouseEvent) => {
     if (item.name === "Rooms" && item.href === "/#rooms") {
       e.preventDefault();
-      const section = document.getElementById("rooms");
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
+      if (window.location.pathname !== "/") {
+        router.push("/#rooms");
+        setTimeout(() => {
+          const section = document.getElementById("rooms");
+          if (section) section.scrollIntoView({ behavior: "smooth" });
+        }, 100); // slight delay for navigation
+      } else {
+        const section = document.getElementById("rooms");
+        if (section) section.scrollIntoView({ behavior: "smooth" });
       }
+    } else if (!item.href.startsWith('/#')) {
+      // For page routes, scroll to top after navigation
+      e.preventDefault();
+      router.push(item.href);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }, 100);
+      setMobileMenuOpen(false);
     }
+    // For hash links, default behavior is fine
   };
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
 
-      // If at top (Hero), none active
-      if (window.scrollY < NAVBAR_HEIGHT - 10) {
-        setActiveNav(null);
-        return;
-      }
-      // Only highlight section links, not page links
+      // Section links
       const sectionNavs = navItems.filter(item => item.href.startsWith('/#'));
-      const sections = sectionNavs.map(item => {
+      let foundActive = false;
+      for (const item of sectionNavs) {
         const id = item.href.split('#')[1];
-        return document.getElementById(id);
-      });
-      const offsets = sections.map(section =>
-        section ? section.getBoundingClientRect().top : Infinity
-      );
-      const closestIdx = offsets.findIndex(offset => offset > 0);
-      if (closestIdx === -1) {
-        setActiveNav(sectionNavs[sectionNavs.length - 1]?.name ?? null);
-      } else if (closestIdx === 0) {
-        setActiveNav(sectionNavs[0]?.name ?? null);
-      } else {
-        setActiveNav(sectionNavs[closestIdx - 1]?.name ?? null);
+        const section = document.getElementById(id);
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          // Section is at the top and visible
+          if (rect.top <= NAVBAR_HEIGHT && rect.bottom > NAVBAR_HEIGHT) {
+            setActiveNav(item.name);
+            foundActive = true;
+            break;
+          }
+        }
+      }
+      if (!foundActive) {
+        // Check for page routes
+        const path = window.location.pathname;
+        const pageNav = navItems.find(item => !item.href.startsWith('/#') && item.href === path);
+        if (pageNav) {
+          setActiveNav(pageNav.name);
+        } else {
+          setActiveNav(null);
+        }
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // run once on mount
     return () => window.removeEventListener('scroll', handleScroll);
   }, [navItems]);
 

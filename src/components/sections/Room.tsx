@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Image from 'next/image';
 import { Star, ChevronLeft, ChevronRight, Users, MapPin, Mountain, Coffee, Eye, Wifi, Bath, Bed, ArrowRight, School } from "lucide-react";
 
 // Define types for better type safety
@@ -457,10 +458,16 @@ const Room = () => {
                             slideIndexes[roomIndex] === imgIdx ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
                           }`}
                         >
-                          <img 
+                          <Image 
                             src={img} 
                             alt={`${defaultRooms[roomIndex].name} ${imgIdx + 1}`} 
-                            className="w-full h-full object-cover" 
+                            fill
+                            sizes="(min-width: 640px) 60vw, 100vw"
+                            className="object-cover"
+                            loading={slideIndexes[roomIndex] === imgIdx ? "eager" : "lazy"}
+                            placeholder="blur"
+                            blurDataURL="/assets/img/blur-placeholder.jpg"
+                            style={{ position: "absolute" }}
                           />
                         </div>
                       ))}

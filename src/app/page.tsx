@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navigation, { NAVBAR_HEIGHT } from '@/components/sections/Navigation'
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
@@ -20,6 +20,15 @@ import { Minimize2 } from 'lucide-react'
 
 export default function Home() {
   const [showChat, setShowChat] = useState(false);
+
+  useEffect(() => {
+    if (window.location.hash === "#rooms") {
+      const section = document.getElementById("rooms");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, []);
 
   return (
     <main className="min-h-screen bg-white text-black" style={{ paddingTop: NAVBAR_HEIGHT }}>
