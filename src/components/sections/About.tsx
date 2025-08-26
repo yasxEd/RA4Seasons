@@ -65,7 +65,7 @@ const AboutPage = () => {
             <div className="mb-4">
               <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-stone-200/50 rounded-full px-4 py-2 sm:px-6 text-stone-600 shadow-sm">
                 <Users size={18} strokeWidth={1.5} className="text-emerald-600" />
-                <span className="text-xs sm:text-sm font-medium tracking-wide">About Us</span>
+                <span className="text-xs sm:text-sm font-medium tracking-wide">Our Story</span>
               </div>
             </div>
             <div className="mb-8">

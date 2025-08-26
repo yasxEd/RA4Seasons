@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Star, Users, MapPin, MessageCircle, Quote, Bed, BedSingle } from "lucide-react";
+import { Star, Users, MapPin, MessageCircle, Quote, Bed, BedSingle, ChevronLeft, ChevronRight } from "lucide-react";
 
 const stats = [
 	{
@@ -58,7 +58,7 @@ const testimonials = [
 		type: "Solo Traveler",
 		rating: 10,
 		comment:
-			"Exceptional stay at Riad 4 Seasons in Imlil! Everything was perfect from start to finish: the warm welcome from Brahim and his daughter Bouchra, always attentive, the quality of homemade meals, impeccable cleanliness, and the unique location overlooking the Atlas mountains with Toubkal in front. The rooms, tastefully decorated in an authentic style, highlight local craftsmanship and create a truly unique atmosphere. Highly recommended!",
+			"Exceptional stay at Riad 4 Seasons in Imlil! Everything was perfect from start to finish: the warm welcome from Brahim and his daughter Bouchra, always attentive, the quality of homemade meals, impeccable cleanliness, and the unique location overlooking the Atlas mountains with Toubkal in front. The rooms, tastefully decorated in an authentic style, highlight local craftsmanship and create a truly unique atmosphere. I highly recommend this place!",
 		reply: "Thank you very much for your review.",
 	},
 	{
@@ -70,7 +70,7 @@ const testimonials = [
 		type: "Couple",
 		rating: 10,
 		comment:
-			"The hotel is exceptional in terms of location. The scenery is breathtaking. A real change of scenery. Special thanks to Bouchra for her warm welcome.",
+			"The hotel is exceptional in terms of location. The scenery is breathtaking. A real change of scenery. Special thanks to Bouchra and the team for their warm welcome.",
 		reply: "Thank you very much for your review. Looking forward...",
 	},
 	{
@@ -184,7 +184,7 @@ const TestimonialCard = ({ testimonial, className = "" }: TestimonialCardProps) 
 				{/* Comment - always full */}
 				<div className="mb-4 md:mb-6 flex-grow">
 					<p className="text-stone-700 leading-relaxed text-sm md:text-base font-light">
-						&lt;{testimonial.comment}&gt;
+						 {testimonial.comment} 
 					</p>
 				</div>
 
@@ -288,13 +288,22 @@ const Testimonials = () => {
 
 	const allTestimonials = [...testimonials, ...userTestimonials];
 
+	// Mobile detection hook
+	const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+
+	// Mobile carousel state
+	const [currentIdx, setCurrentIdx] = useState(0);
+
+	const handlePrev = () => setCurrentIdx((idx) => Math.max(idx - 1, 0));
+	const handleNext = () => setCurrentIdx((idx) => Math.min(idx + 1, allTestimonials.length - 1));
+
 	return (
 		<section
-			className="min-h-screen bg-gradient-to-br  relative overflow-hidden py-12 pb-2" // reduced bottom padding
+			className="min-h-screen bg-gradient-to-br  relative overflow-hidden py-12 pb-2"
 			id="testimonials"
 		>
 			<div className="relative z-40 w-full h-full md:border-[20px] border-white md:rounded-[3rem] overflow-hidden bg-white backdrop-blur-xl">
-				<div className="relative z-60 px-6 md:px-8 max-w-7xl mx-auto py-12 md:py-16 pb-4"> {/* reduced bottom padding */}
+				<div className="relative z-60 px-6 md:px-8 max-w-7xl mx-auto py-12 md:py-16 pb-4">
 					{/* Header */}
 					<div className="text-center mb-16 md:mb-20">
 						<div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-stone-200/50 rounded-full px-6 py-2 text-stone-600 shadow-sm mb-8">
@@ -330,21 +339,52 @@ const Testimonials = () => {
 						))}
 					</div>
 
-					{/* Masonry layout with aligned first row */}
-					<div 
-						className="columns-1 md:columns-2 gap-6"
-						style={{
-							columnFill: 'balance'
-						}}
-					>
-						{allTestimonials.map((testimonial, index) => (
-							<TestimonialCard 
-								testimonial={testimonial} 
-								key={index} 
-								className={index < 2 ? "mt-0" : ""}
-							/>
-						))}
-					</div>
+					{/* Testimonials Layout */}
+					{isMobile ? (
+						// Mobile arrow carousel
+						<div className="flex flex-col items-center justify-center relative w-full">
+							<div className="flex items-center justify-center w-full mb-2">
+								<button
+									onClick={handlePrev}
+									disabled={currentIdx === 0}
+									className={`p-2 rounded-full bg-white border border-stone-200 shadow transition-all duration-200 mr-2 ${currentIdx === 0 ? "opacity-30 cursor-default" : "hover:bg-emerald-50"}`}
+									aria-label="Previous testimonial"
+								>
+									<ChevronLeft className="w-6 h-6 text-emerald-700" />
+								</button>
+								<button
+									onClick={handleNext}
+									disabled={currentIdx === allTestimonials.length - 1}
+									className={`p-2 rounded-full bg-white border border-stone-200 shadow transition-all duration-200 ml-2 ${currentIdx === allTestimonials.length - 1 ? "opacity-30 cursor-default" : "hover:bg-emerald-50"}`}
+									aria-label="Next testimonial"
+								>
+									<ChevronRight className="w-6 h-6 text-emerald-700" />
+								</button>
+							</div>
+							<div className="flex-1 min-w-0 w-full flex justify-center">
+								<TestimonialCard testimonial={allTestimonials[currentIdx]} className="mt-0" />
+							</div>
+							<div className="mt-4 text-xs text-stone-400 font-medium">
+								{currentIdx + 1} / {allTestimonials.length}
+							</div>
+						</div>
+					) : (
+						// Desktop masonry
+						<div
+							className="columns-1 md:columns-2 gap-6"
+							style={{
+								columnFill: 'balance'
+							}}
+						>
+							{allTestimonials.map((testimonial, index) => (
+								<TestimonialCard
+									testimonial={testimonial}
+									key={index}
+									className={index < 2 ? "mt-0" : ""}
+								/>
+							))}
+						</div>
+					)}
 
 					{/* Write a Review CTA */}
 					<div className="mt-12 md:mt-16 text-center px-2 sm:px-0">

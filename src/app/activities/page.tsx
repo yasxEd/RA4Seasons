@@ -530,7 +530,7 @@ export default function ToursPage() {
 								}
 							`}
 						>
-							MYSTICAL ADVENTURES
+							Tours
 						</button>
 						<button
 							onClick={() => setActiveSection('mtb')}
@@ -542,7 +542,7 @@ export default function ToursPage() {
 								}
 							`}
 						>
-							BIKE WARRIORS
+							MTB Tours
 						</button>
 					</div>
 				</div>

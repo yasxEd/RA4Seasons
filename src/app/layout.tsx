@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import BodyWithDir from '@/components/BodyWithDir'
-import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
   title: 'Riad Atlas 4 Seasons',
@@ -28,11 +27,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <LanguageProvider>
+      <body>
         <BodyWithDir>
           {children}
         </BodyWithDir>
-      </LanguageProvider>
+      </body>
     </html>
   )
 }

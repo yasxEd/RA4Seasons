@@ -23,3 +23,11 @@ export interface ButtonProps {
   className?: string;
   onClick?: () => void;
 }
+
+export type ConsoleError = {
+  message: string;
+  stack?: string;
+  componentStack?: string;
+  code?: string;
+  info?: any;
+};

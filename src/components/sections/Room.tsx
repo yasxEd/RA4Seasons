@@ -310,48 +310,65 @@ const Room = () => {
                 <span className="text-xs sm:text-sm font-medium tracking-wide">Our Rooms</span>
               </div>
             </div>
-            <h2 className="text-5xl font-extralight tracking-wide text-neutral-800 mb-4">
+            <h2 className="text-3xl sm:text-5xl font-extralight tracking-wide text-neutral-800 mb-4">
               Discover Your Perfect Stay
             </h2>
-           
           </div>
 
           {/* Carousel Container */}
           <div className="relative flex flex-col items-center">
             {/* Carousel arrows */}
             <button
-              className="absolute -left-8 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 z-20 hover:bg-neutral-100 transition"
+              className="hidden sm:block absolute -left-8 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 z-20 hover:bg-neutral-100 transition"
               onClick={prevRoom}
               aria-label="Previous Room"
             >
               <ChevronLeft className="w-5 h-5 text-neutral-700" />
             </button>
             <button
-              className="absolute -right-8 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 z-20 hover:bg-neutral-100 transition"
+              className="hidden sm:block absolute -right-8 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full p-2 z-20 hover:bg-neutral-100 transition"
               onClick={nextRoom}
               aria-label="Next Room"
             >
               <ChevronRight className="w-5 h-5 text-neutral-700" />
             </button>
 
-            {/* Fixed size card container - CRITICAL CHANGES HERE */}
+            {/* Mobile arrows below card */}
+            <div className="flex sm:hidden justify-between w-full px-8 mb-4">
+              <button
+                className="bg-white shadow rounded-full p-2 hover:bg-neutral-100 transition"
+                onClick={prevRoom}
+                aria-label="Previous Room"
+              >
+                <ChevronLeft className="w-5 h-5 text-neutral-700" />
+              </button>
+              <button
+                className="bg-white shadow rounded-full p-2 hover:bg-neutral-100 transition"
+                onClick={nextRoom}
+                aria-label="Next Room"
+              >
+                <ChevronRight className="w-5 h-5 text-neutral-700" />
+              </button>
+            </div>
+
+            {/* Card container */}
             <div
               className="w-full max-w-4xl mx-auto transition-all duration-700"
               onMouseEnter={() => setHoveredRoom(roomIndex)}
               onMouseLeave={() => setHoveredRoom(null)}
             >
               <div 
-                className="bg-white rounded-3xl shadow-2xl overflow-hidden transition-all duration-700 transform hover:scale-105 h-[500px]" // FIXED HEIGHT
+                className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden transition-all duration-700 transform hover:scale-105 h-auto sm:h-[500px]"
                 style={{ 
                   boxShadow: hoveredRoom === roomIndex 
                     ? '0 40px 80px -20px rgba(0, 0, 0, 0.25)' 
                     : '0 20px 40px -10px rgba(0, 0, 0, 0.1)'
                 }}
               >
-                <div className="grid lg:grid-cols-5 h-full"> {/* FULL HEIGHT GRID */}
-                  {/* Left Content - 2 columns - FIXED DIMENSIONS */}
-                  <div className="lg:col-span-2 p-6 flex flex-col h-full"> {/* FULL HEIGHT WITH FLEX COLUMN */}
-                    {/* Header - FIXED SPACE */}
+                <div className="flex flex-col sm:grid sm:lg:grid-cols-5 h-full">
+                  {/* Left Content - mobile stacked, desktop grid */}
+                  <div className="p-4 sm:p-6 flex flex-col h-full sm:lg:col-span-2">
+                    {/* Header */}
                     <div className="flex-none">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
@@ -365,23 +382,20 @@ const Room = () => {
                           <span className="text-xs font-medium">{defaultRooms[roomIndex].rating}</span>
                         </div>
                       </div>
-
-                      <h3 className="text-2xl font-light text-neutral-800 mb-3 leading-tight">
+                      <h3 className="text-lg sm:text-2xl font-light text-neutral-800 mb-3 leading-tight">
                         {defaultRooms[roomIndex].name}
                       </h3>
                     </div>
-
-                    {/* Scrollable content area - FLEXIBLE SPACE */}
+                    {/* Scrollable content area */}
                     <div className="flex-1 overflow-hidden flex flex-col min-h-0">
-                      {/* Description - FIXED HEIGHT WITH OVERFLOW */}
-                      <div className="h-16 mb-4"> {/* FIXED HEIGHT */}
-                        <p className="text-neutral-600 leading-relaxed line-clamp-3 overflow-hidden text-sm">
+                      {/* Description */}
+                      <div className="h-16 sm:h-16 mb-4">
+                        <p className="text-neutral-600 leading-relaxed line-clamp-3 overflow-hidden text-xs sm:text-sm">
                           {defaultRooms[roomIndex].description}
                         </p>
                       </div>
-
-                      {/* Room specs - FIXED LAYOUT */}
-                      <div className="grid grid-cols-2 gap-3 mb-4 flex-none">
+                      {/* Room specs */}
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 flex-none">
                         <div>
                           <p className="text-xs text-neutral-400 uppercase tracking-wider mb-1">Size</p>
                           <p className="text-neutral-700 font-medium text-xs">{defaultRooms[roomIndex].size}</p>
@@ -399,11 +413,10 @@ const Room = () => {
                           <p className="text-neutral-700 font-medium text-xs">{defaultRooms[roomIndex].reviews}</p>
                         </div>
                       </div>
-
-                      {/* Amenities - FIXED HEIGHT WITH SCROLLABLE CONTENT */}
+                      {/* Amenities */}
                       <div className="flex-1 min-h-0">
                         <p className="text-xs text-neutral-400 uppercase tracking-wider mb-2">Amenities</p>
-                        <div className="flex flex-wrap gap-1 h-14 overflow-y-auto"> {/* FIXED HEIGHT WITH SCROLL */}
+                        <div className="flex flex-wrap gap-1 h-14 overflow-y-auto">
                           {defaultRooms[roomIndex].amenities.map((amenity, i) => (
                             <span
                               key={i}
@@ -415,19 +428,18 @@ const Room = () => {
                         </div>
                       </div>
                     </div>
-
-                    {/* Footer - FIXED SPACE */}
+                    {/* Footer */}
                     <div className="flex-none mt-6 pt-6 border-t border-neutral-100">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                         <div>
-                          <div className="flex items-center gap-3 mb-1">
-                            <span className="text-2xl font-light text-neutral-800">{defaultRooms[roomIndex].price}</span>
-                            <span className="text-lg text-neutral-400 line-through">{defaultRooms[roomIndex].originalPrice}</span>
+                          <div className="flex items-center gap-2 sm:gap-3 mb-1">
+                            <span className="text-xl sm:text-2xl font-light text-neutral-800">{defaultRooms[roomIndex].price}</span>
+                            <span className="text-base sm:text-lg text-neutral-400 line-through">{defaultRooms[roomIndex].originalPrice}</span>
                           </div>
                           <p className="text-xs text-neutral-500">per night</p>
                         </div>
-                        <button className="group bg-neutral-800 text-white px-6 py-3 rounded-full hover:bg-neutral-900 transition-all duration-300 flex items-center gap-2">
-                          <span className="font-medium text-sm">Reserve</span>
+                        <button className="group bg-neutral-800 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full hover:bg-neutral-900 transition-all duration-300 flex items-center gap-2">
+                          <span className="font-medium text-xs sm:text-sm">Reserve</span>
                           <div className="w-4 h-4 rounded-full bg-white flex items-center justify-center group-hover:scale-110 transition-transform">
                             <ArrowRight className="w-2.5 h-2.5 text-neutral-800" />
                           </div>
@@ -435,11 +447,9 @@ const Room = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Right Image Gallery - 3 columns - FIXED DIMENSIONS */}
-                  <div className="lg:col-span-3 relative h-full"> {/* FULL HEIGHT */}
-                    {/* Image slideshow */}
-                    <div className="absolute inset-0 overflow-hidden rounded-r-3xl">
+                  {/* Right Image Gallery */}
+                  <div className="relative h-48 sm:h-full sm:lg:col-span-3">
+                    <div className="absolute inset-0 overflow-hidden rounded-r-2xl sm:rounded-r-3xl">
                       {defaultRooms[roomIndex].images.map((img, imgIdx) => (
                         <div
                           key={imgIdx}
@@ -455,12 +465,9 @@ const Room = () => {
                         </div>
                       ))}
                     </div>
-
-                    {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-
                     {/* Image navigation dots */}
-                    <div className="absolute top-8 right-8 z-20">
+                    <div className="absolute top-4 sm:top-8 right-4 sm:right-8 z-20">
                       <div className="flex space-x-2">
                         {defaultRooms[roomIndex].images.map((_, dotIdx) => (
                           <button
@@ -475,18 +482,16 @@ const Room = () => {
                         ))}
                       </div>
                     </div>
-
                     {/* View indicator */}
-                    <div className="absolute bottom-8 left-8 right-8 flex items-center justify-between text-white z-20">
-                      <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-8 right-4 sm:right-8 flex items-center justify-between text-white z-20">
+                      <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm px-3 sm:px-4 py-1 sm:py-2 rounded-full">
                         <Eye className="w-4 h-4" />
-                        <span className="text-sm font-medium">{defaultRooms[roomIndex].details}</span>
+                        <span className="text-xs sm:text-sm font-medium">{defaultRooms[roomIndex].details}</span>
                       </div>
-                      <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full">
-                        <span className="text-sm">{slideIndexes[roomIndex] + 1}/{defaultRooms[roomIndex].images.length}</span>
+                      <div className="bg-black/20 backdrop-blur-sm px-3 sm:px-4 py-1 sm:py-2 rounded-full">
+                        <span className="text-xs sm:text-sm">{slideIndexes[roomIndex] + 1}/{defaultRooms[roomIndex].images.length}</span>
                       </div>
                     </div>
-
                     {/* Hover effect overlay */}
                     <div 
                       className={`absolute inset-0 bg-neutral-900/10 transition-opacity duration-300 ${
@@ -497,13 +502,12 @@ const Room = () => {
                 </div>
               </div>
             </div>
-
             {/* Carousel dots for rooms */}
-            <div className="flex justify-center mt-8 gap-3">
+            <div className="flex justify-center mt-6 sm:mt-8 gap-2 sm:gap-3">
               {defaultRooms.map((_, idx) => (
                 <button
                   key={idx}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full transition-all duration-300 ${
                     roomIndex === idx ? 'bg-neutral-800 scale-125' : 'bg-neutral-300 hover:bg-neutral-400'
                   }`}
                   onClick={() => goToRoom(idx)}
@@ -512,49 +516,48 @@ const Room = () => {
               ))}
             </div>
           </div>
-           {/* Clean Amenities Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Left-aligned header */}
-          <div className="mb-16">
-            <div className="w-16 h-px bg-emerald-600 mb-6" />
-            <h2 className="text-4xl font-light text-stone-900 mb-4">Amenities</h2>
-            <p className="text-stone-600 font-light max-w-lg">
-              Everything you need for the perfect mountain retreat
-            </p>
-          </div>
-
-          {/* Amenities in one row, no wrap, no scroll */}
-          <div className="flex flex-nowrap gap-4 items-center">
-            {roomAmenities.map((amenity, idx) => (
-              <div
-                key={idx}
-                className="group cursor-pointer transition-all duration-300 hover:scale-105"
-                style={{ 
-                  animationDelay: `${idx * 150}ms` 
-                }}
-              >
-                <div className="bg-stone-50 hover:bg-emerald-50 border border-stone-100 hover:border-emerald-200 rounded-2xl p-4 h-full transition-all duration-300 group-hover:shadow-lg">
-                  {/* Icon */}
-                  <div className="mb-3">
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      {lucideIconMap[amenity]}
+          {/* Amenities Section */}
+          <section className="py-16 sm:py-24 bg-white">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              {/* Left-aligned header */}
+              <div className="mb-10 sm:mb-16">
+                <div className="w-12 sm:w-16 h-px bg-emerald-600 mb-4 sm:mb-6" />
+                <h2 className="text-2xl sm:text-4xl font-light text-stone-900 mb-2 sm:mb-4">Amenities</h2>
+                <p className="text-stone-600 font-light max-w-xs sm:max-w-lg text-sm sm:text-base">
+                  Everything you need for the perfect mountain retreat
+                </p>
+              </div>
+              {/* Amenities row */}
+              <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 items-center">
+                {roomAmenities.map((amenity, idx) => (
+                  <div
+                    key={idx}
+                    className="group cursor-pointer transition-all duration-300 hover:scale-105"
+                    style={{ 
+                      animationDelay: `${idx * 150}ms` 
+                    }}
+                  >
+                    <div className="bg-stone-50 hover:bg-emerald-50 border border-stone-100 hover:border-emerald-200 rounded-xl sm:rounded-2xl p-2 sm:p-4 h-full transition-all duration-300 group-hover:shadow-lg">
+                      {/* Icon */}
+                      <div className="mb-2 sm:mb-3">
+                        <div className="w-6 sm:w-8 h-6 sm:h-8 flex items-center justify-center">
+                          {lucideIconMap[amenity]}
+                        </div>
+                      </div>
+                      {/* Text */}
+                      <h3 className="text-stone-800 font-medium text-xs sm:text-sm leading-tight">
+                        {amenity}
+                      </h3>
                     </div>
                   </div>
-                  {/* Text */}
-                  <h3 className="text-stone-800 font-medium text-sm leading-tight">
-                    {amenity}
-                  </h3>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-          {/* Slight text below amenities */}
-          <div className="mt-3 text-sm text-neutral-400 text-right">
-            +45 more
-          </div>
-        </div>
-      </section>
+              {/* Slight text below amenities */}
+              <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-neutral-400 text-left sm:text-right">
+                +45 more
+              </div>
+            </div>
+          </section>
         </div>
       </section>
 

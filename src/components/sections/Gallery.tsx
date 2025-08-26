@@ -21,6 +21,17 @@ export const GallerySections: React.FC<GalleryProps> = ({
   experiences,
   galleryImagesChosen,
 }) => {
+  // --- Add mobile detection state ---
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+  // --- End mobile detection state ---
+
   const imagesToShow = [
     "/assets/img/gallery/1.jpg",
     "/assets/img/gallery/2.jpg",
@@ -187,28 +198,61 @@ export const GallerySections: React.FC<GalleryProps> = ({
           <div className="text-center mb-20">
              {/* Location indicator badge above title */}
             <div className="mb-4">
-              <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-stone-200/50 rounded-full px-4 py-2 sm:px-6 text-stone-600 shadow-sm">
-                <Activity size={18} strokeWidth={1.5} className="text-emerald-600" />
-                <span className="text-xs sm:text-sm font-medium tracking-wide">Our Activities</span>
+              <div
+                className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-stone-200/50 rounded-full px-4 py-2 sm:px-6 text-stone-600 shadow-sm"
+                style={{
+                  // Mobile: reduce padding and gap
+                  padding: isMobile ? "8px 16px" : undefined,
+                  gap: isMobile ? "6px" : undefined,
+                  fontSize: isMobile ? "0.85rem" : undefined,
+                }}
+              >
+                <Activity size={isMobile ? 16 : 18} strokeWidth={1.5} className="text-emerald-600" />
+                <span
+                  className="text-xs sm:text-sm font-medium tracking-wide"
+                  style={{
+                    fontSize: isMobile ? "0.85rem" : undefined,
+                  }}
+                >
+                  Our Activities
+                </span>
               </div>
             </div>
-            <h2 className="text-5xl font-extralight tracking-wide text-neutral-900 mb-10 tracking-[0.1em]">
+            <h2
+              className="text-5xl font-extralight tracking-wide text-neutral-900 mb-10 tracking-[0.1em]"
+              style={{
+                fontSize: isMobile ? "2rem" : undefined,
+                marginBottom: isMobile ? "1.5rem" : undefined,
+                lineHeight: isMobile ? "2.4rem" : undefined,
+              }}
+            >
               Authentic Experiences
             </h2>
-            <p className="text-xl text-neutral-600 leading-relaxed font-light max-w-4xl mx-auto">
+            <p
+              className="text-xl text-neutral-600 leading-relaxed font-light max-w-4xl mx-auto"
+              style={{
+                fontSize: isMobile ? "1rem" : undefined,
+                paddingLeft: isMobile ? "0.5rem" : undefined,
+                paddingRight: isMobile ? "0.5rem" : undefined,
+                marginBottom: isMobile ? "1.5rem" : undefined,
+              }}
+            >
               Discover the beauty of Morocco with our curated tours, exploring local culture, history, and breathtaking landscapes that define the soul of this magnificent land.
             </p>
           </div>
-          
           <div
             className="gallery flex rounded-2xl overflow-hidden"
             style={{
-              height: "80vh",
-              display: "flex",
-              position: "relative",
-              boxShadow: "0 25px 80px rgba(0,0,0,0.08)",
+              flexDirection: isMobile ? "column" : "row",
+              height: isMobile ? "440px" : "80vh",
+              boxShadow: isMobile
+                ? "0 8px 32px rgba(0,0,0,0.10)"
+                : "0 25px 80px rgba(0,0,0,0.08)",
               border: "1px solid rgba(0,0,0,0.05)",
               background: "white",
+              borderRadius: isMobile ? "18px" : "1rem",
+              gap: isMobile ? "18px" : "0",
+              padding: isMobile ? "12px" : "0",
             }}
           >
             {[
@@ -219,7 +263,7 @@ export const GallerySections: React.FC<GalleryProps> = ({
                 date: "STARTED",
               },
               {
-                url: "/assets/img/mtb.png",
+                url: "/assets/img/mtbs.jpg",
                 artist: "MTB Tours",
                 subtitle: "Cultural Journey", 
                 date: "START SOON",
@@ -231,6 +275,7 @@ export const GallerySections: React.FC<GalleryProps> = ({
                 artist={img.artist}
                 date={img.date}
                 last={idx === 1}
+                mobile={isMobile}
               />
             ))}
           </div>
@@ -241,9 +286,9 @@ export const GallerySections: React.FC<GalleryProps> = ({
   );
 };
 
-// Add this component at the bottom of the file:
-const GalleryFlexImage: React.FC<{url: string; artist: string; date: string; last?: boolean}> = ({
-  url, artist, date, last
+// Update GalleryFlexImage to accept mobile prop and enhance mobile layout
+const GalleryFlexImage: React.FC<{url: string; artist: string; date: string; last?: boolean; mobile?: boolean}> = ({
+  url, artist, date, last, mobile
 }) => {
   const [hover, setHover] = useState(false);
   return (
@@ -251,58 +296,69 @@ const GalleryFlexImage: React.FC<{url: string; artist: string; date: string; las
       className="imgWrap"
       style={{
         cursor: "pointer",
-        flexGrow: hover ? 2.25 : 0.8,
+        flexGrow: mobile ? 1 : (hover ? 2.25 : 0.8),
         flex: 1,
         minWidth: last ? "1px" : "0",
-        height: "100%",
+        height: mobile ? "200px" : "100%",
         overflow: "hidden",
         position: "relative",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center center",
         backgroundSize: "cover",
-        // Smoother flex transition
-        transition: "flex-grow 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        transition: mobile
+          ? "box-shadow 0.5s, border-radius 0.5s"
+          : "flex-grow 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         transformOrigin: "center center",
         backgroundImage: `url(${url})`,
-        // GPU acceleration
-        willChange: "flex-grow",
+        willChange: mobile ? "box-shadow, border-radius" : "flex-grow",
         backfaceVisibility: "hidden",
         WebkitBackfaceVisibility: "hidden",
+        borderRadius: mobile ? "14px" : "0",
+        boxShadow: mobile ? "0 4px 16px rgba(0,0,0,0.10)" : undefined,
+        marginBottom: mobile && !last ? "12px" : "0",
       }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={() => !mobile && setHover(true)}
+      onMouseLeave={() => !mobile && setHover(false)}
     >
       <div
         className="caption"
         style={{
           position: "absolute",
           left: 0,
-          bottom: hover ? 0 : "-100%",
-          background: "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.75) 100%)",
-          backdropFilter: "blur(12px)",
-          borderTop: "1px solid rgba(255,255,255,0.2)",
-          padding: "32px 24px",
+          bottom: mobile ? "0" : (hover ? 0 : "-100%"),
+          background: mobile
+            ? "linear-gradient(135deg, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.60) 100%)"
+            : "linear-gradient(135deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.75) 100%)",
+          backdropFilter: "blur(10px)",
+          borderTop: "1px solid rgba(255,255,255,0.15)",
+          padding: mobile ? "18px 14px" : "32px 24px",
           color: "#fff",
           width: "100%",
-          // Smoother caption transition
-          transition: "bottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          transition: mobile
+            ? "none"
+            : "bottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
           zIndex: 2,
-          // GPU acceleration
           transform: "translateZ(0)",
-          willChange: "bottom",
+          willChange: mobile ? undefined : "bottom",
+          borderRadius: mobile ? "0 0 14px 14px" : "0",
         }}
       >
-        <div className="w-16 h-px bg-gradient-to-r from-emerald-700 to-transparent mb-4" />
+        <div
+          className="w-16 h-px bg-gradient-to-r from-emerald-700 to-transparent mb-4"
+          style={{
+            marginBottom: mobile ? "8px" : "16px",
+          }}
+        />
         <h3 style={{
-          fontSize: "clamp(1.25rem, 2vw, 1.5rem)",
-          fontWeight: "300",
-          letterSpacing: "0.1em",
-          marginBottom: "8px",
+          fontSize: mobile ? "1.1rem" : "clamp(1.25rem, 2vw, 1.5rem)",
+          fontWeight: "400",
+          letterSpacing: "0.08em",
+          marginBottom: mobile ? "4px" : "8px",
           color: "#fff",
         }}>{artist}</h3>
         <div style={{
-          fontSize: "0.875rem",
-          color: "rgba(255,255,255,0.7)",
+          fontSize: mobile ? "0.95rem" : "0.875rem",
+          color: "rgba(255,255,255,0.8)",
           fontWeight: "300",
           letterSpacing: "0.05em"
         }}>{date}</div>

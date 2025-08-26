@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight, Play, Star, MapPin, ChevronDown } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 
 const Hero = () => {
@@ -10,7 +9,6 @@ const Hero = () => {
   const [hasBeenExpanded, setHasBeenExpanded] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
-  const { t, language } = useLanguage();
 
   // Smooth scroll to a section by id
   const smoothScroll = (id: string) => {
@@ -77,7 +75,7 @@ const Hero = () => {
   return (
     <section ref={heroRef} className="min-h-screen bg-white relative overflow-hidden pt-0">
       {/* Main Hero Content with border and contained background */}
-      <div className="relative z-40 w-full h-full pb-32 pt-20 sm:pb-40 sm:pt-32 md:border-[20px] border-white md:rounded-[3rem] overflow-hidden">
+      <div className="relative z-40 w-full h-full pb-32 pt-32 sm:pt-20 sm:pb-40 sm:pt-32 md:border-[20px] border-white md:rounded-[3rem] overflow-hidden">
         {/* Clean gradient background with nature colors */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-stone-50 to-neutral-100 md:rounded-2xl"></div>
         {/* Subtle overlay */}
@@ -144,20 +142,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      {/* CTA Buttons - Positioned absolutely above the mountain image */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-44 sm:bottom-48 md:bottom-40 lg:bottom-36 z-[60] flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 w-full px-4 sm:px-0">
-        <Link
-          href="/#pricing"
-          className="group bg-emerald-700 hover:bg-emerald-800 text-white px-6 sm:px-10 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-medium flex items-center justify-center gap-2 sm:gap-3 hover:shadow-lg hover:shadow-emerald-900/25 transition-all duration-300 text-sm sm:text-base w-full max-w-[200px] mx-auto sm:w-auto sm:max-w-none"
-        >
-          <span>Reserve Your Stay</span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-        <button className="group flex items-center justify-center gap-2 sm:gap-3 text-stone-700 hover:text-emerald-700 transition-colors text-sm sm:text-base bg-white/60 hover:bg-white/80 backdrop-blur-md border border-stone-200/50 px-6 sm:px-10 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-medium w-full max-w-[200px] mx-auto sm:w-auto sm:max-w-none">
-          <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
-          <span>Experience Tour</span>
-        </button>
-      </div>
       {/* Mountain Image */}
       <div
         ref={dashboardRef}
@@ -197,7 +181,7 @@ const Hero = () => {
             </div>
             <ChevronDown className="w-5 h-5 text-white mt-2 group-hover:text-white transition-colors" />
             <span className="text-xs text-white mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              {t('hero_scroll')}
+              Scroll down
             </span>
           </motion.div>
         </motion.div>
@@ -230,7 +214,7 @@ const Hero = () => {
             </div>
             <ChevronDown className="w-5 h-5 text-white mt-2 group-hover:text-white transition-colors" />
             <span className="text-xs text-white mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              {t('hero_scroll')}
+              Scroll down
             </span>
           </motion.div>
         </motion.div>

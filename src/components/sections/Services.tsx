@@ -158,8 +158,22 @@ const SECTION_MAP = "map"; // Add this line to define SECTION_MAP
 
 import { useState, useEffect } from "react";
 
+function useIsMobile(breakpoint = 640) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < breakpoint);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [breakpoint]);
+  return isMobile;
+}
+
 const Services = () => {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     // Show all sections after mount (can be customized for scroll/animation)
@@ -322,18 +336,35 @@ const Services = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
-            {staffMembers.map((person, idx) => (
-              <div key={idx} className="group text-center">
-                <div className="relative mb-4 sm:mb-6">
-                  
+          {/* Mobile enhanced layout */}
+          {isMobile ? (
+            <div className="flex flex-col gap-4">
+              {staffMembers.map((person, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white rounded-xl shadow-md px-4 py-6 text-center flex flex-col items-center"
+                >
+                  {/* Optionally add avatar/icon here */}
+                  <h3 className="text-lg font-light text-emerald-900 mb-1">{person.name}</h3>
+                  <div className="text-emerald-700 font-medium mb-2 text-xs uppercase tracking-wide">{person.role}</div>
+                  <p className="text-stone-600 font-light leading-relaxed text-sm">{person.description}</p>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-light text-emerald-900 mb-1 sm:mb-2">{person.name}</h3>
-                <div className="text-emerald-700 font-medium mb-2 sm:mb-4 text-xs sm:text-sm uppercase tracking-wide">{person.role}</div>
-                <p className="text-stone-600 font-light leading-relaxed text-sm sm:text-base">{person.description}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+              {staffMembers.map((person, idx) => (
+                <div key={idx} className="group text-center">
+                  <div className="relative mb-4 sm:mb-6">
+                  
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-light text-emerald-900 mb-1 sm:mb-2">{person.name}</h3>
+                  <div className="text-emerald-700 font-medium mb-2 sm:mb-4 text-xs sm:text-sm uppercase tracking-wide">{person.role}</div>
+                  <p className="text-stone-600 font-light leading-relaxed text-sm sm:text-base">{person.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

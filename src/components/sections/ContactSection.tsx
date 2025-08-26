@@ -1,11 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, MessageCircle } from "lucide-react";
-import { useLanguage } from "@/context/LanguageContext";
 
 const ContactSection = () => {
-  const { t, language } = useLanguage();
-
   return (
     <section className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4 md:px-6">
@@ -18,11 +15,7 @@ const ContactSection = () => {
               <span className="text-emerald-700 font-semibold">Booking & Inquiry</span>
             </div>
             {/* Heading - responsive text sizes */}
-            <h3
-              className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-stone-800 mb-4 md:mb-6 leading-tight
-                ${language === "ar" ? "text-3xl sm:text-4xl md:text-5xl lg:text-6xl" : ""}
-              `}
-            >
+            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-stone-800 mb-4 md:mb-6 leading-tight">
               riad atlas 4 seasons
             </h3>
 
