@@ -10,7 +10,7 @@ const CamelIcon = () => (
 	<img src="/assets/icons/camel.png" alt="Camel" className="w-10 h-10 object-contain" />
 );
 const BeachIcon = () => (
-	<img src="/assets/icons/bachh.png" alt="Beach" className="w-10 h-10 object-contain" />
+	<img src="/assets/icons/beach.png" alt="Beach" className="w-10 h-10 object-contain" />
 );
 const DesertIcon = () => (
 	<img src="/assets/icons/desert.png" alt="Desert" className="w-10 h-10 object-contain" />
