@@ -18,6 +18,17 @@ const Navbar: React.FC = () => {
     { name: 'Activities', href: '/activities' }, // ensure this is a route
   ];
 
+  // Add scroll handler for "Rooms"
+  const handleNavClick = (item: typeof navItems[0], e: React.MouseEvent) => {
+    if (item.name === "Rooms" && item.href === "/#rooms") {
+      e.preventDefault();
+      const section = document.getElementById("rooms");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -96,6 +107,7 @@ const Navbar: React.FC = () => {
                       ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
                       : 'text-gray-700 hover:text-gray-900'
                     }`}
+                  onClick={(e) => handleNavClick(item, e)}
                 >
                   {item.name}
                 </Link>
@@ -163,7 +175,7 @@ const Navbar: React.FC = () => {
                     ? 'text-emerald-700 bg-emerald-50'
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                   }`}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => handleNavClick(item, e)}
               >
                 {item.name}
               </Link>

@@ -238,7 +238,7 @@ const Room = () => {
   return (
     <>
       {/* Premium Room Cards Section as Carousel */}
-      <section className="py-32 bg-gradient-to-b from-white to-white relative overflow-hidden">
+      <section id="rooms" className="py-32 bg-gradient-to-b from-white to-white relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full opacity-30 blur-3xl" />
