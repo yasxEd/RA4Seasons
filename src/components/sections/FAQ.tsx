@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, Minus, MapPin } from "lucide-react";
+import { Plus, Minus } from "lucide-react";
 
 const FAQSection = () => {
   // Track open state for each individual item by index
@@ -53,23 +53,23 @@ const FAQSection = () => {
   ];
 
   return (
-    <section className="min-h-screen bg-white relative overflow-hidden py-20">
+    <section className="min-h-screen bg-white relative overflow-hidden py-12">
       {/* Main Content with border and contained background like Hero */}
       <div className="relative z-40 w-full h-full md:border-[20px] border-white md:rounded-[3rem] overflow-hidden bg-white">
 
         {/* Content */}
-        <div className="relative z-60 px-6 md:px-8 max-w-6xl mx-auto py-16 md:py-24">
+        <div className="relative z-60 px-6 md:px-8 max-w-6xl mx-auto py-10 md:py-16">
           {/* Header matching Hero style */}
           <div className="text-center mb-16 md:mb-20">
             {/* Location indicator */}
             <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-stone-200/50 rounded-full px-6 py-2 text-stone-600 shadow-sm mb-8">
-              <MapPin className="w-4 h-4 text-emerald-600" />
+              <Plus className="w-4 h-4 text-emerald-600" /> {/* changed from MapPin to Plus */}
               <span className="text-sm font-medium tracking-wide">Frequently Asked Questions</span>
             </div>
             
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-stone-800 mb-6 md:mb-8 leading-[0.9] tracking-tight">
+            <h2 className="text-5xl font-extralight tracking-wide text-stone-800 mb-6 md:mb-8 leading-[0.9] tracking-tight">
               Everything You <span className="font-medium text-emerald-700">Need to Know</span>
-            </h1>
+            </h2>
             <p className="text-lg md:text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed font-light">
               Find answers to the most common questions about your stay, amenities, and experiences at our riad
             </p>
@@ -87,7 +87,7 @@ const FAQSection = () => {
                   className="w-full p-6 md:p-8 text-left flex items-start justify-between group"
                   aria-expanded={openItems.has(index)}
                 >
-                  <span className="text-lg md:text-xl font-light text-stone-800 pr-4 leading-relaxed">
+                  <span className="text-sm md:text-base font-light text-stone-800 pr-4 leading-relaxed">
                     {item.question}
                   </span>
                   <div className="flex-shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-full bg-stone-100/80 backdrop-blur-sm flex items-center justify-center group-hover:bg-emerald-100/80 transition-all duration-300 mt-1">
@@ -101,7 +101,7 @@ const FAQSection = () => {
                 {openItems.has(index) && (
                   <div className="px-6 md:px-8 pb-6 md:pb-8">
                     <div className="pt-2 border-t border-stone-200/30">
-                      <p className="text-stone-600 leading-relaxed mt-4 text-base md:text-lg font-light">
+                      <p className="text-xs md:text-sm text-stone-600 leading-relaxed mt-4 font-light">
                         {item.answer}
                       </p>
                     </div>

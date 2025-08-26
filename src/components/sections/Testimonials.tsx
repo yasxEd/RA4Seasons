@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Star, Users, MapPin, MessageCircle } from "lucide-react";
+import { Star, Users, MapPin, MessageCircle, Quote, Bed, BedSingle } from "lucide-react";
 
 const stats = [
 	{
 		label: "Guest Rating",
 		value: "9.5",
 		icon: (
-			<Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
-		),
+			 <img
+                  src="/assets/img/Booking-Logo.png"
+                  alt="Booking.com"
+                  className="h-4 sm:h-5 w-auto"
+                />),
 	},
 	{
 		label: "Reviews",
@@ -16,8 +19,8 @@ const stats = [
 	},
 	{
 		label: "Rooms",
-		value: "10",
-		icon: <Users className="w-4 h-4 text-emerald-700" />,
+		value: "8",
+		icon: <BedSingle className="w-4 h-4 text-emerald-700" />,
 	},
 ];
 
@@ -116,9 +119,119 @@ const testimonials = [
 		comment: "Very welcoming and friendly staff.",
 		reply: "Thank you very much for your review.",
 	},
+	{
+		name: "Fatima",
+		country: "Morocco",
+		room: "Deluxe Double Room",
+		nights: 2,
+		date: "September 2, 2025",
+		type: "Couple",
+		rating: 10,
+		comment:
+			"Wonderful stay! The staff was very friendly and the food was delicious. The view from our room was breathtaking. Highly recommended for a relaxing getaway.",
+		reply: "Thank you Fatima for your kind words. Hope to see you again soon!",
+	},
 ];
 
 const LOCAL_KEY = "testimonials_user_submitted";
+
+type Testimonial = {
+	name: string;
+	country: string;
+	room: string;
+	nights: number;
+	date: string;
+	type: string;
+	rating: number;
+	comment: string;
+	reply?: string;
+};
+
+type TestimonialCardProps = {
+	testimonial: Testimonial;
+	className?: string;
+};
+
+const TestimonialCard = ({ testimonial, className = "" }: TestimonialCardProps) => {
+	return (
+		<div className={`break-inside-avoid mb-6 bg-white border border-stone-200/60 rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-md transition-all duration-300 relative flex flex-col justify-between ${className}`}>
+			{/* Subtle gradient overlay */}
+			<div className="absolute inset-0 bg-gradient-to-br from-emerald-50/30 via-transparent to-stone-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+			{/* Quote icon */}
+			<div className="absolute top-6 right-6 opacity-20 group-hover:opacity-30 transition-opacity duration-300">
+				<Quote className="w-8 h-8 text-emerald-600" />
+			</div>
+			<div className="relative z-10 flex flex-col h-full">
+				{/* Rating */}
+				<div className="flex items-center gap-3 mb-4 md:mb-6">
+					<div className="flex items-center gap-1">
+						{[...Array(5)].map((_, i) => (
+							<Star 
+								key={i} 
+								className={`w-4 h-4 ${
+									i < Math.floor(testimonial.rating / 2) 
+										? "text-amber-400 fill-amber-400" 
+										: "text-stone-200 fill-stone-200"
+								}`} 
+							/>
+						))}
+					</div>
+					<span className="text-lg font-semibold text-stone-800 tracking-tight">
+						{testimonial.rating}/10
+					</span>
+				</div>
+
+				{/* Comment - always full */}
+				<div className="mb-4 md:mb-6 flex-grow">
+					<p className="text-stone-700 leading-relaxed text-sm md:text-base font-light">
+						&lt;{testimonial.comment}&gt;
+					</p>
+				</div>
+
+				{/* Guest Info - always at bottom */}
+				<div className="mt-auto relative">
+					<div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
+						<div className="flex items-center gap-2 text-stone-600">
+							<div className="w-7 md:w-8 h-7 md:h-8 rounded-full bg-gradient-to-br from-emerald-100 to-stone-100 flex items-center justify-center">
+								<span className="text-xs font-semibold text-emerald-700">
+									{testimonial.name.charAt(0)}
+								</span>
+							</div>
+							<div>
+								<div className="flex items-center gap-1 text-sm font-medium text-stone-800">
+									{testimonial.name}
+									<span className="text-stone-400">•</span>
+									<span className="text-stone-500">{testimonial.country}</span>
+								</div>
+							</div>
+						</div>
+						
+						<div className="flex items-center gap-4 text-xs text-stone-500">
+							<div className="flex items-center gap-1">
+								<Users className="w-3 h-3" />
+								<span className="truncate">{testimonial.room}</span>
+							</div>
+							<div className="flex items-center gap-1">
+								<MapPin className="w-3 h-3" />
+								<span>{testimonial.nights} night{testimonial.nights > 1 ? "s" : ""}</span>
+							</div>
+						</div>
+						
+						<div className="text-xs text-stone-400 font-medium tracking-wide">
+							{testimonial.date}
+						</div>
+					</div>
+					{/* Type badge in bottom right */}
+					<div className="absolute bottom-0 right-0">
+						<span className="inline-flex items-center px-2 md:px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100 shadow">
+							{testimonial.type}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
 
 const Testimonials = () => {
 	const [showForm, setShowForm] = useState(false);
@@ -133,6 +246,7 @@ const Testimonials = () => {
 		comment: "",
 	});
 	const [submitted, setSubmitted] = useState(false);
+	
 	type UserTestimonial = {
 		name: string;
 		country: string;
@@ -153,7 +267,7 @@ const Testimonials = () => {
 		setUserTestimonials(stored.filter((t: UserTestimonial) => t.status === "approved"));
 	}, []);
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.MouseEvent) => {
 		e.preventDefault();
 		const newTestimony = { ...form, status: "pending" };
 		const stored = JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]");
@@ -172,25 +286,27 @@ const Testimonials = () => {
 		});
 	};
 
+	const allTestimonials = [...testimonials, ...userTestimonials];
+
 	return (
 		<section
-			className="min-h-screen bg-white relative overflow-hidden py-20"
+			className="min-h-screen bg-gradient-to-br  relative overflow-hidden py-12 pb-2" // reduced bottom padding
 			id="testimonials"
 		>
-			<div className="relative z-40 w-full h-full md:border-[20px] border-white md:rounded-[3rem] overflow-hidden bg-white">
-				<div className="relative z-60 px-6 md:px-8 max-w-6xl mx-auto py-16 md:py-24">
+			<div className="relative z-40 w-full h-full md:border-[20px] border-white md:rounded-[3rem] overflow-hidden bg-white backdrop-blur-xl">
+				<div className="relative z-60 px-6 md:px-8 max-w-7xl mx-auto py-12 md:py-16 pb-4"> {/* reduced bottom padding */}
 					{/* Header */}
 					<div className="text-center mb-16 md:mb-20">
-						<div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-stone-200/50 rounded-full px-6 py-2 text-stone-600 shadow-sm mb-8">
-							<MapPin className="w-4 h-4 text-emerald-600" />
+						<div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-stone-200/50 rounded-full px-6 py-2 text-stone-600 shadow-sm mb-8">
+							<Star className="w-4 h-4 text-emerald-600" />
 							<span className="text-sm font-medium tracking-wide">
 								Guest Reviews
 							</span>
 						</div>
-						<h1 className="text-4xl sm:text-5xl md:text-6xl font-light text-stone-800 mb-6 md:mb-8 leading-[0.9] tracking-tight">
+						<h2 className="text-5xl font-extralight tracking-wide text-stone-800 mb-6 md:mb-8 leading-[0.9] tracking-tight">
 							What our{" "}
 							<span className="font-medium text-emerald-700">guests say</span>
-						</h1>
+						</h2>
 						<p className="text-lg md:text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed font-light">
 							Discover authentic experiences from our visitors at Riad Atlas 4
 							Seasons.
@@ -200,116 +316,57 @@ const Testimonials = () => {
 					{/* Stats */}
 					<div className="flex flex-wrap justify-center gap-8 md:gap-12 mb-12 md:mb-16">
 						{stats.map((stat, idx) => (
-							<div key={idx} className="text-center">
-								<div className="flex items-center justify-center gap-1 mb-1">
-									{stat.icon}
-									<span className="text-2xl font-light text-stone-800">
+							<div key={idx} className="text-center group">
+								<div className="flex items-center justify-center gap-2 mb-2 group-hover:scale-105 transition-transform duration-200">
+									<span className="text-3xl font-light text-stone-800 tracking-tight">
 										{stat.value}
 									</span>
+									{stat.icon}
 								</div>
-								<p className="text-sm text-stone-500 tracking-wide">
+								<p className="text-sm text-stone-500 tracking-wide font-medium">
 									{stat.label}
 								</p>
 							</div>
 						))}
 					</div>
 
-					{/* Testimonials Grid */}
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
-						{testimonials.map((t, idx) => (
-							<div
-								key={idx}
-								className="bg-white/60 backdrop-blur-md border border-stone-200/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
-							>
-								<div className="p-6 md:p-8 flex-1 flex flex-col">
-									<div className="flex items-center gap-3 mb-2">
-										<Star className="w-5 h-5 text-emerald-700 fill-emerald-700" />
-										<span className="text-xl font-medium text-stone-800">
-											{t.rating}/10
-										</span>
-										<span className="text-sm text-stone-500 ml-2">
-											{t.type}
-										</span>
-									</div>
-									<div className="text-stone-600 text-base mb-2 font-light">
-										&lt;{t.comment}&gt;
-									</div>
-									<div className="flex items-center gap-2 text-sm text-stone-500 mb-2">
-										<Users className="w-4 h-4" />
-										<span>
-											{t.room} · {t.nights} night
-											{t.nights > 1 ? "s" : ""}
-										</span>
-									</div>
-									<div className="flex items-center gap-2 text-sm text-stone-500 mb-2">
-										<MapPin className="w-4 h-4" />
-										<span>
-											{t.name} ({t.country}) · {t.date}
-										</span>
-									</div>
-									{t.reply && (
-										<div className="mt-4 bg-emerald-50 border-l-4 border-emerald-700 pl-4 py-2 text-sm text-emerald-700 rounded">
-											<span className="font-medium">Reply:</span> {t.reply}
-										</div>
-									)}
-								</div>
-							</div>
-						))}
-						{/* User submitted and approved testimonials */}
-						{userTestimonials.map((t: UserTestimonial, idx) => (
-							<div
-								key={`user-${idx}`}
-								className="bg-white/60 backdrop-blur-md border border-stone-200/50 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
-							>
-								<div className="p-6 md:p-8 flex-1 flex flex-col">
-									<div className="flex items-center gap-3 mb-2">
-										<Star className="w-5 h-5 text-emerald-700 fill-emerald-700" />
-										<span className="text-xl font-medium text-stone-800">
-											{t.rating}/10
-										</span>
-										<span className="text-sm text-stone-500 ml-2">
-											{t.type}
-										</span>
-									</div>
-									<div className="text-stone-600 text-base mb-2 font-light">
-										&lt;{t.comment}&gt;
-									</div>
-									<div className="flex items-center gap-2 text-sm text-stone-500 mb-2">
-										<Users className="w-4 h-4" />
-										<span>
-											{t.room} · {t.nights} night
-											{t.nights > 1 ? "s" : ""}
-										</span>
-									</div>
-									<div className="flex items-center gap-2 text-sm text-stone-500 mb-2">
-										<MapPin className="w-4 h-4" />
-										<span>
-											{t.name} ({t.country}) · {t.date}
-										</span>
-									</div>
-								</div>
-							</div>
+					{/* Masonry layout with aligned first row */}
+					<div 
+						className="columns-1 md:columns-2 gap-6"
+						style={{
+							columnFill: 'balance'
+						}}
+					>
+						{allTestimonials.map((testimonial, index) => (
+							<TestimonialCard 
+								testimonial={testimonial} 
+								key={index} 
+								className={index < 2 ? "mt-0" : ""}
+							/>
 						))}
 					</div>
+
 					{/* Write a Review CTA */}
-					<div className="mt-12 md:mt-20 text-center px-2 sm:px-0">
+					<div className="mt-12 md:mt-16 text-center px-2 sm:px-0">
 						<button
-							className="group bg-emerald-700 hover:bg-emerald-800 text-white px-10 py-4 rounded-2xl font-medium flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-emerald-900/25 transition-all duration-300 mx-auto text-lg"
+							className="group bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-12 py-4 rounded-full font-medium flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-emerald-900/25 transition-all duration-500 mx-auto text-lg hover:scale-105"
 							onClick={() => setShowForm(true)}
 						>
+							<MessageCircle className="w-5 h-5" />
 							<span>Write a review</span>
 						</button>
-						<div className="text-xs text-stone-400 mt-4">
+						<div className="text-xs text-stone-400 mt-4 font-medium tracking-wide">
 							Our goal: 100% authentic reviews
 						</div>
 						{submitted && (
-							<div className="mt-4 text-emerald-700 text-sm">
-								Thank you for your review! It will be published after validation
-								by the administrator.
+							<div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 text-sm rounded-full border border-emerald-200">
+								<div className="w-2 h-2 rounded-full bg-emerald-500" />
+								Thank you! Your review will be published after validation.
 							</div>
 						)}
 					</div>
-					{/* Testimony Form Modal */}
+
+					{/* Form Modal - keeping the original design */}
 					{showForm && (
 						<div
 							className="fixed inset-0 bg-gradient-to-br from-black/40 via-stone-900/30 to-emerald-900/20 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4"
@@ -338,10 +395,7 @@ const Testimonials = () => {
 
 								{/* Modal Body */}
 								<div className="flex-1 overflow-y-auto">
-									<form
-										onSubmit={handleSubmit}
-										className="p-4 sm:p-8 space-y-6"
-									>
+									<div className="p-4 sm:p-8 space-y-6">
 										{/* Personal Info Section */}
 										<div className="space-y-4">
 											<h3 className="text-lg font-medium text-stone-700 flex items-center gap-2">
@@ -427,13 +481,13 @@ const Testimonials = () => {
 														className="w-full px-4 py-3 bg-white/80 border border-stone-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300 text-stone-600"
 													>
 														<option value="">Type of stay</option>
-														<option value="Famille">Family</option>
+														<option value="Family">Family</option>
 														<option value="Couple">Couple</option>
-														<option value="Voyageur individuel">
+														<option value="Solo Traveler">
 															Solo Traveler
 														</option>
-														<option value="Amis">With friends</option>
-														<option value="Voyage d'affaires">Business trip</option>
+														<option value="With friends">With friends</option>
+														<option value="Business trip">Business trip</option>
 													</select>
 												</div>
 											</div>
@@ -502,14 +556,14 @@ const Testimonials = () => {
 												Cancel
 											</button>
 											<button
-												type="submit"
+												onClick={handleSubmit}
 												className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white rounded-2xl shadow-lg hover:shadow-emerald-900/25 transition-all duration-300 font-medium order-1 sm:order-2 flex items-center justify-center gap-2"
 											>
 												<MessageCircle className="w-4 h-4" />
 												Publish my review
 											</button>
 										</div>
-									</form>
+									</div>
 								</div>
 							</div>
 						</div>

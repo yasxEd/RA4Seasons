@@ -4,13 +4,14 @@ import React, { useState } from 'react'
 import Navigation, { NAVBAR_HEIGHT } from '@/components/sections/Navigation'
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
-import Features from '@/components/sections/Features'
+import Features from '@/components/sections/Room'
 import Contact from '@/components/sections/Contact'
 import Testimonials from '@/components/sections/Testimonials'
 import FAQ from '@/components/sections/FAQ'
 import Footer from '@/components/sections/Footer'
-import Pricing from '@/components/sections/Pricing'
 import Services from '@/components/sections/Services'
+import Room from '@/components/sections/Room'
+import GallerySections from '@/components/sections/Gallery'
 import Image from 'next/image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic'
@@ -25,10 +26,13 @@ export default function Home() {
       <Navigation />
       <section id="home"><Hero /></section>
       <section id="about"><About /></section>
-      <section id="features"><Features /></section>
+      <section id="room"><Room /></section>
+      <section id="gallery">
+        <GallerySections galleryImages={[]} experiences={[]} />
+      </section>
+
       <section id="services"><Services /></section>
       <section id="testimonials"><Testimonials /></section>
-      <section id="pricing"><Pricing /></section>
       <section id="faq"><FAQ /></section>
       <section id="contact"><Contact /></section>
       <Footer />

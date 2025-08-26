@@ -119,17 +119,26 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-8 md:gap-12 mb-8 sm:mb-12 md:mb-16">
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
-                <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                 <span className="text-xl sm:text-2xl font-light text-stone-800">9.5</span>
+                <img
+                  src="/assets/img/Booking-Logo.png"
+                  alt="Booking.com"
+                  className="h-4 sm:h-5 w-auto"
+                />
               </div>
-              <p className="text-xs sm:text-sm text-stone-500 tracking-wide">675 Guest Rating</p>
+              <div className="flex items-center justify-center gap-1 mt-1">
+                
+                                <span className="text-xs sm:text-sm text-stone-800 font-medium">675</span>
+
+                <span className="text-xs sm:text-sm text-stone-500">reviews</span>
+              </div>
             </div>
             <div className="text-center">
               <div className="text-xl sm:text-2xl font-light text-stone-800 mb-1">1,740m</div>
               <p className="text-xs sm:text-sm text-stone-500 tracking-wide">Elevation</p>
             </div>
             <div className="text-center">
-              <div className="text-xl sm:text-2xl font-light text-stone-800 mb-1">10</div>
+              <div className="text-xl sm:text-2xl font-light text-stone-800 mb-1">8</div>
               <p className="text-xs sm:text-sm text-stone-500 tracking-wide">Rooms</p>
             </div>
           </div>
